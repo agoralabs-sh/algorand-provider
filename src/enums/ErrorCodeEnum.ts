@@ -4,9 +4,7 @@ enum ErrorCodeEnum {
   NoWalletsDetectedError = 4001,
   WalletDoesNotExistError = 4002,
   WalletFeatureNotAvailableError = 4003,
-
-  // connect
-  ConnectRequestDeniedError = 4100,
+  OperationCanceledError = 4004,
 }
 
 export default ErrorCodeEnum;

@@ -2,14 +2,21 @@
 import BaseWalletManager from './BaseWalletManager';
 
 // Errors
-import { NoWalletsDetectedError, WalletDoesNotExistError } from '../errors';
+import {
+  NoWalletsDetectedError,
+  WalletDoesNotExistError,
+  WalletFeatureNotAvailableError,
+} from '../errors';
 
 // Types
 import {
   IAddWalletOptions,
-  IBaseConnectResult,
+  IBaseOptions,
+  IBaseResult,
   IConnectOptions,
   IConnectResult,
+  ISignBytesOptions,
+  ISignBytesResult,
 } from '../types';
 
 export default class AlgorandProvider {
@@ -21,49 +28,35 @@ export default class AlgorandProvider {
   }
 
   /**
-   * Public functions
+   * Private functions
    */
 
   /**
-   * Connects to a wallet. If the ID of the wallet is specified, that wallet is used, otherwise the default wallet is
-   * used to connect.
-   * @param {IConnectOptions} options - [optional] an object containing connection information such as which wallet to
-   * connect to and which chain to use.
-   * @returns {IConnectResult} an object containing which wallet was used, chain information, available accounts and
-   * optional connection information.
-   * @throws {ConnectRequestDeniedError} if the connect request was denied by the user.
-   * @throws {NoWalletsDetectedError} if no wallets have been added.
-   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * Gets the wallet as specified by its ID, or the default wallet if no ID is provided.
+   * @param {string} id - [optional] the ID of the wallet.
+   * @returns {BaseWalletManager | null} the wallet if it exists, null otherwise.
    */
-  public async connect(options?: IConnectOptions): Promise<IConnectResult> {
-    let connectResult: IBaseConnectResult;
-    let wallet: BaseWalletManager | null;
-
+  private getWallet(id?: string): BaseWalletManager | null {
     if (this.wallets.length <= 0) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
+      return null;
     }
 
-    wallet = this.getWallet();
-
-    if (options?.id) {
-      wallet = this.getWallet(options.id);
-
-      if (!wallet) {
-        throw new WalletDoesNotExistError(options.id);
-      }
+    // if an id is provided, try to find it.
+    if (id) {
+      return this.wallets.find((value) => value.id === id) || null;
     }
 
-    if (!wallet) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
+    // if the default provider index is out of bounds, reset to 0.
+    if (this.defaultWalletIndex > this.wallets.length - 1) {
+      this.defaultWalletIndex = 0;
     }
 
-    connectResult = await wallet.connect({ genesisHash: options?.genesisHash });
-
-    return {
-      ...connectResult,
-      id: wallet.id,
-    };
+    return this.wallets[this.defaultWalletIndex] || null;
   }
+
+  /**
+   * Public functions
+   */
 
   /**
    * Adds a wallet, or if the `replace` option is set, will replace any existing wallet matching by ID.
@@ -93,34 +86,54 @@ export default class AlgorandProvider {
   }
 
   /**
-   * Gets the wallet as specified by its ID, or the default wallet if no ID is provided.
-   * @param {string} id - [optional] the ID of the wallet.
-   * @returns {BaseWalletManager | null} the wallet if it exists, null otherwise.
+   * Connects to a wallet. If the ID of the wallet is specified, that wallet is used, otherwise the default wallet is
+   * used to connect.
+   * @param {IBaseOptions & IConnectOptions} options - [optional] an object containing connection information such as
+   * which wallet to connect to and which chain to use.
+   * @returns {IBaseResult & IConnectResult} an object containing which wallet was used, chain information, available
+   * accounts and optional connection information.
+   * @throws {NoWalletsDetectedError} if no wallets have been added.
+   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @throws {OperationCanceledError} if the connect request was denied by the user.
    */
-  public getWallet(id?: string): BaseWalletManager | null {
+  public async connect(
+    options?: IBaseOptions & IConnectOptions
+  ): Promise<IBaseResult & IConnectResult> {
+    let result: IConnectResult;
+    let wallet: BaseWalletManager | null;
+
     if (this.wallets.length <= 0) {
-      return null;
+      throw new NoWalletsDetectedError(`no wallets detected`);
     }
 
-    // if an id is provided, try to find it.
-    if (id) {
-      return this.wallets.find((value) => value.id === id) || null;
+    wallet = this.getWallet();
+
+    if (options?.id) {
+      wallet = this.getWallet(options.id);
+
+      if (!wallet) {
+        throw new WalletDoesNotExistError(options.id);
+      }
     }
 
-    // if the default provider index is out of bounds, reset to 0.
-    if (this.defaultWalletIndex > this.wallets.length - 1) {
-      this.defaultWalletIndex = 0;
+    if (!wallet) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
     }
 
-    return this.wallets[this.defaultWalletIndex] || null;
+    result = await wallet.connect({ genesisHash: options?.genesisHash });
+
+    return {
+      ...result,
+      id: wallet.id,
+    };
   }
 
   /**
-   * Gets all the wallets.
-   * @returns {BaseWalletManager[]} gets all the providers.
+   * Gets a list of all the wallets by their IDs.
+   * @returns {string[]} a list of the wallet IDs.
    */
-  public getWallets(): BaseWalletManager[] {
-    return this.wallets;
+  public getWallets(): string[] {
+    return this.wallets.map((value) => value.id);
   }
 
   /**
@@ -131,5 +144,55 @@ export default class AlgorandProvider {
     const index: number = this.wallets.findIndex((value) => value.id === id);
 
     this.defaultWalletIndex = index < 0 ? this.defaultWalletIndex : index;
+  }
+
+  /**
+   * Signs an arbitrary piece of data. The returned signature can be verified using {@link https://algorand.github.io/js-algorand-sdk/functions/verifyBytes.html algosdk.verifyBytes}
+   * @param {IBaseOptions & ISignBytesOptions} options - an object containing the wallet information and the arbitrary
+   * piece of data to sign.
+   * @returns {IBaseResult & ISignBytesResult} an object containing the wallet information and the signature of the data
+   * with the MX prefix.
+   * @throws {NoWalletsDetectedError} if no wallets have been added.
+   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the signing of data.
+   * @throws {OperationCanceledError} if the request was denied by the user.
+   */
+  public async signBytes({
+    id,
+    data,
+  }: IBaseOptions & ISignBytesOptions): Promise<
+    IBaseResult & ISignBytesResult
+  > {
+    let result: ISignBytesResult;
+    let wallet: BaseWalletManager | null;
+
+    if (this.wallets.length <= 0) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    wallet = this.getWallet();
+
+    if (id) {
+      wallet = this.getWallet(id);
+
+      if (!wallet) {
+        throw new WalletDoesNotExistError(id);
+      }
+    }
+
+    if (!wallet) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    if (!wallet.signBytes) {
+      throw new WalletFeatureNotAvailableError(wallet.id, 'signBytes');
+    }
+
+    result = await wallet.signBytes?.({ data });
+
+    return {
+      id: wallet.id,
+      ...result,
+    };
   }
 }
