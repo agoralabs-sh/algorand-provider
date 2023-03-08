@@ -19,7 +19,7 @@ jobs:
           node-version: 'lts/*'
       - name: "📝 Create .npmrc"
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.PUBLISH_PACKAGES_TOKEN }}" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.PUBLISH_PUBLIC_PACKAGES_TOKEN }}" >> .npmrc
           echo "@agoralabs-sh:registry=https://registry.npmjs.org" >> .npmrc
           echo "access=public" >> .npmrc
       - name: "📦 Install"
