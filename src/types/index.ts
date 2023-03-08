@@ -6,4 +6,7 @@ export type { default as IEnableResult } from './IEnableResult';
 export type { default as INewBaseWalletManagerOptions } from './INewBaseWalletManagerOptions';
 export type { default as ISignBytesOptions } from './ISignBytesOptions';
 export type { default as ISignBytesResult } from './ISignBytesResult';
+export type { default as ISignTransaction } from './ISignTransaction';
+export type { default as ISignTxnsOptions } from './ISignTxnsOptions';
+export type { default as ISignTxnsResult } from './ISignTxnsResult';
 export type { default as IWalletAccount } from './IWalletAccount';

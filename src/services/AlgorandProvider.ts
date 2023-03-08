@@ -17,6 +17,8 @@ import {
   IEnableResult,
   ISignBytesOptions,
   ISignBytesResult,
+  ISignTxnsOptions,
+  ISignTxnsResult,
 } from '../types';
 
 export default class AlgorandProvider {
@@ -191,6 +193,56 @@ export default class AlgorandProvider {
     }
 
     result = await wallet.signBytes?.(signBytesOptions);
+
+    return {
+      id: wallet.id,
+      ...result,
+    };
+  }
+
+  /**
+   * Sends a list of transactions to be signed. The transactions must conform to
+   * {@link https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0001.md ARC-0001}.
+   * @param {IBaseOptions & ISignTxnsOptions} options - an object containing the wallet information and the transactions
+   * to be signed.
+   * @returns {IBaseResult & ISignTxnsResult} an object containing the wallet information and the signed transactions
+   * ready to be posted to the network.
+   * @throws {NoWalletsDetectedError} if no wallets have been added.
+   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the signing of transactions.
+   * @throws {OperationCanceledError} if the request was denied by the user.
+   * @throws {UnauthorizedSignerError} if supplied signer is not authorized by the wallet.
+   */
+  public async signTxns({
+    id,
+    ...signTxnsOptions
+  }: IBaseOptions & ISignTxnsOptions): Promise<IBaseResult & ISignTxnsResult> {
+    let result: ISignTxnsResult;
+    let wallet: BaseWalletManager | null;
+
+    if (this.wallets.length <= 0) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    wallet = this.getWallet();
+
+    if (id) {
+      wallet = this.getWallet(id);
+
+      if (!wallet) {
+        throw new WalletDoesNotExistError(id);
+      }
+    }
+
+    if (!wallet) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    if (!wallet.signTxns) {
+      throw new WalletFeatureNotAvailableError(wallet.id, 'signTxns');
+    }
+
+    result = await wallet.signTxns?.(signTxnsOptions);
 
     return {
       id: wallet.id,

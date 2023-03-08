@@ -344,4 +344,115 @@ describe(AlgorandProvider.name, () => {
       expect(result.signature).toEqual(signature);
     });
   });
+
+  describe(`${AlgorandProvider.name}#signTxns`, () => {
+    it('should throw an error if no wallets are detected', async () => {
+      try {
+        // Arrange
+        // Act
+        await algorandProvider.signTxns({
+          id: wallet.id,
+          txns: [
+            {
+              txn: new Uint8Array(randomBytes(32)),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as NoWalletsDetectedError).code).toBe(
+          ErrorCodeEnum.NoWalletsDetectedError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown a no wallet detected error');
+    });
+
+    it('should throw an error if the specified wallet does not exist', async () => {
+      // Arrange
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.signTxns({
+          id: faker.datatype.uuid(), // use some random id
+          txns: [
+            {
+              txn: new Uint8Array(randomBytes(32)),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as WalletDoesNotExistError).code).toBe(
+          ErrorCodeEnum.WalletDoesNotExistError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown a wallet does not exist error');
+    });
+
+    it('should throw an error if the feature is not available in the wallet', async () => {
+      // Arrange
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.signTxns({
+          id: wallet.id,
+          txns: [
+            {
+              txn: new Uint8Array(randomBytes(32)),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as WalletFeatureNotAvailableError).code).toBe(
+          ErrorCodeEnum.WalletFeatureNotAvailableError
+        );
+
+        return;
+      }
+
+      throw new Error(
+        'should have thrown a wallet feature not available error'
+      );
+    });
+
+    it('should throw an error if the operation was canceled by the user', async () => {
+      // Arrange
+      wallet.signTxns = () =>
+        Promise.reject(
+          new OperationCanceledError('operation canceled by user')
+        );
+
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.signTxns({
+          id: wallet.id,
+          txns: [
+            {
+              txn: new Uint8Array(randomBytes(32)),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as OperationCanceledError).code).toBe(
+          ErrorCodeEnum.OperationCanceledError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown an operation canceled error');
+    });
+  });
 });

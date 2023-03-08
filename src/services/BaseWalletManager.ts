@@ -5,6 +5,8 @@ import {
   INewBaseWalletManagerOptions,
   ISignBytesOptions,
   ISignBytesResult,
+  ISignTxnsOptions,
+  ISignTxnsResult,
 } from '../types';
 
 export default abstract class BaseWalletManager {
@@ -26,11 +28,23 @@ export default abstract class BaseWalletManager {
   public abstract enable(options?: IEnableOptions): Promise<IEnableResult>;
 
   /**
-   * Signs an arbitrary piece of data. The returned signature can be verified using {@link https://algorand.github.io/js-algorand-sdk/functions/verifyBytes.html algosdk.verifyBytes}
+   * Signs an arbitrary piece of data. The returned signature can be verified using
+   * {@link https://algorand.github.io/js-algorand-sdk/functions/verifyBytes.html algosdk.verifyBytes}
    * @param {ISignBytesOptions} options - an object containing the arbitrary piece of data to sign.
    * @returns {ISignBytesResult} an object containing the signature of the data with the MX prefix.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {UnauthorizedSignerError} if the supplied signer is not authorized by the wallet.
    */
   public signBytes?(options: ISignBytesOptions): Promise<ISignBytesResult>;
+
+  /**
+   * Sends a list of transactions to be signed. The transactions must conform to
+   * {@link https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0001.md ARC-0001}.
+   * @param {IBaseOptions & ISignTxnsOptions} options - an object containing the transactions to be signed.
+   * @returns {IBaseResult & ISignTxnsResult} an object containing the signed transactions ready to be posted to the
+   * network.
+   * @throws {OperationCanceledError} if the request was denied by the user.
+   * @throws {UnauthorizedSignerError} if the supplied signer is not authorized by the wallet.
+   */
+  public signTxns?(options: ISignTxnsOptions): Promise<ISignTxnsResult>;
 }
