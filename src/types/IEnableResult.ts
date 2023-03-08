@@ -7,11 +7,11 @@ import IWalletAccount from './IWalletAccount';
  * @property {string} genesisId - the genesis ID of the chain the wallet is connected to.
  * @property {string} sessionId - [optional] a unique identifier for this session provided by the wallet.
  */
-interface IConnectResult {
+interface IEnableResult {
   accounts: IWalletAccount[];
   genesisHash: string;
   genesisId: string;
   sessionId?: string;
 }
 
-export default IConnectResult;
+export default IEnableResult;

@@ -29,7 +29,7 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "build": "tsc -b --project tsconfig.build.json",
+    "build": "tsc -b tsconfig.build.json",
     "lint": "eslint . --ext .ts --ext .js",
     "prepare": "husky install",
     "prettier": "prettier --config .prettierrc --write \"**/*.{js,json,ts}\"",

@@ -13,8 +13,8 @@ import {
   IAddWalletOptions,
   IBaseOptions,
   IBaseResult,
-  IConnectOptions,
-  IConnectResult,
+  IEnableOptions,
+  IEnableResult,
   ISignBytesOptions,
   ISignBytesResult,
 } from '../types';
@@ -88,19 +88,19 @@ export default class AlgorandProvider {
   /**
    * Connects to a wallet. If the ID of the wallet is specified, that wallet is used, otherwise the default wallet is
    * used to connect.
-   * @param {IBaseOptions & IConnectOptions} options - [optional] an object containing connection information such as
+   * @param {IBaseOptions & IEnableOptions} options - [optional] an object containing connection information such as
    * which wallet to connect to and which chain to use.
-   * @returns {IBaseResult & IConnectResult} an object containing which wallet was used, chain information, available
+   * @returns {IBaseResult & IEnableResult} an object containing which wallet was used, chain information, available
    * accounts and optional connection information.
    * @throws {NoWalletsDetectedError} if no wallets have been added.
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
    * @throws {NetworkNotSupportedError} if the wallet does not support the network defined by the genesis hash.
    * @throws {OperationCanceledError} if the connect request was denied by the user.
    */
-  public async connect(
-    options?: IBaseOptions & IConnectOptions
-  ): Promise<IBaseResult & IConnectResult> {
-    let result: IConnectResult;
+  public async enable(
+    options?: IBaseOptions & IEnableOptions
+  ): Promise<IBaseResult & IEnableResult> {
+    let result: IEnableResult;
     let wallet: BaseWalletManager | null;
 
     if (this.wallets.length <= 0) {
@@ -121,7 +121,7 @@ export default class AlgorandProvider {
       throw new NoWalletsDetectedError(`no wallets detected`);
     }
 
-    result = await wallet.connect({ genesisHash: options?.genesisHash });
+    result = await wallet.enable({ genesisHash: options?.genesisHash });
 
     return {
       ...result,
@@ -157,10 +157,11 @@ export default class AlgorandProvider {
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
    * @throws {WalletFeatureNotAvailableError} if the wallet does not support the signing of data.
    * @throws {OperationCanceledError} if the request was denied by the user.
+   * @throws {UnauthorizedSignerError} if supplied signer is not authorized by the wallet.
    */
   public async signBytes({
     id,
-    data,
+    ...signBytesOptions
   }: IBaseOptions & ISignBytesOptions): Promise<
     IBaseResult & ISignBytesResult
   > {
@@ -189,7 +190,7 @@ export default class AlgorandProvider {
       throw new WalletFeatureNotAvailableError(wallet.id, 'signBytes');
     }
 
-    result = await wallet.signBytes?.({ data });
+    result = await wallet.signBytes?.(signBytesOptions);
 
     return {
       id: wallet.id,
