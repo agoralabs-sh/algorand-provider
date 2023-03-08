@@ -94,6 +94,7 @@ export default class AlgorandProvider {
    * accounts and optional connection information.
    * @throws {NoWalletsDetectedError} if no wallets have been added.
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @throws {NetworkNotSupportedError} if the wallet does not support the network defined by the genesis hash.
    * @throws {OperationCanceledError} if the connect request was denied by the user.
    */
   public async connect(

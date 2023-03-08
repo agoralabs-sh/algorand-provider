@@ -20,6 +20,7 @@ export default abstract class BaseWalletManager {
    * @param {IConnectOptions} options - [optional] an object containing which chain to connect to.
    * @returns {IConnectResult} an object containing the chain information, available accounts and optional connection
    * information.
+   * @throws {NetworkNotSupportedError} if the wallet does not support the network defined by the genesis hash.
    * @throws {OperationCanceledError} if the connect request was denied by the user.
    */
   public abstract connect(options?: IConnectOptions): Promise<IConnectResult>;
