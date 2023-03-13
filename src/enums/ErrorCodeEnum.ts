@@ -1,5 +1,5 @@
 enum ErrorCodeEnum {
-  // general errors
+  // provider errors
   UnknownError = 4000,
   NoWalletsDetectedError = 4001,
   WalletDoesNotExistError = 4002,
@@ -8,6 +8,7 @@ enum ErrorCodeEnum {
   OperationCanceledError = 4101,
   NetworkNotSupportedError = 4102,
   UnauthorizedSignerError = 4103,
+  // sign errors
 }
 
 export default ErrorCodeEnum;
