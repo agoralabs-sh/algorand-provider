@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Circular Algorand icon" src="assets/logo-64.png" style="padding-top: 15px" height="64" />
+  <img alt="Circular Algorand icon" src="assets/logo.svg" style="padding-top: 15px" height="64" />
 </p>
 
 <h1 align="center">
@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  Algorand provider is an interface that allows dApps to connect, and interact, with wallets in a standardized way.
+  Algorand provider is an interface that bridges the gap between to allow dApps to connect, and interact, with wallets in a standardized way.
 </p>
 
 ### Table of contents
