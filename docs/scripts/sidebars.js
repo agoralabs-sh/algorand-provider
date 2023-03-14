@@ -9,12 +9,20 @@ const sidebars = {
         {
           type: 'category',
           label: 'DApps',
-          items: ['getting-started/dapps/usage'],
+          items: [
+            'getting-started/dapps/initialization',
+            'getting-started/dapps/enabling-a-wallet',
+            // 'getting-started/dapps/signing-transactions',
+            // 'getting-started/dapps/signing-data',
+          ],
         },
         {
           type: 'category',
           label: 'Wallets',
-          items: ['getting-started/wallets/installation'],
+          items: [
+            'getting-started/wallets/installation',
+            // 'getting-started/wallets/initialization',
+          ],
         },
       ],
       label: 'Getting Started',

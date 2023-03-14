@@ -1,0 +1,68 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem'; import {AlgorandProvider} from '../../../src';
+
+# Initialization
+
+Any wallets that are installed, it will initialize an [`AlgorandProvider`](api-reference/algorand-provider) object and assign it to `window.algorand`.
+
+First, we will need to check if the `window.algorand` object exists:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+if (!window.algorand) {
+  throw new Error('no wallets are installed!');
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+if (!window.algorand) {
+  throw new Error('no wallets are installed!');
+}
+```
+
+  </TabItem>
+</Tabs>
+
+If the `window.algorand` object exists, we can check what wallets have been added:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const wallets = window.algorand.getWallets();
+
+console.log(wallets);
+// ['agora-wallet', 'another-awesome-wallet']
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { AlgorandProvider } from '@agoralabs-sh/algorand-provider';
+
+const wallets: string[] = (window.algorand as AlgorandProvider).getWallets();
+
+console.log(wallets);
+// ['agora-wallet', 'another-awesome-wallet']
+```
+
+  </TabItem>
+</Tabs>
+
+When we have confirmed that the `window.algorand` object exists and contains wallets, we can proceed to enabling the dApp with a wallet.
