@@ -386,16 +386,208 @@ console.log(result);
   ],
 }
 */
-
 ```
 
 ## Signing transactions with multisig accounts
+
+When using multisig accounts to sign transactions, a few extra options must be provided to the options object.
+
+The transaction must now include the `msig` object that conforms to [`algosdk.MultisigMetadata`](https://algorand.github.io/js-algorand-sdk/interfaces/MultisigMetadata.html).
 
 :::caution
 
 The wallet may not support multisig accounts, in which case a [`WalletOperationNotSupportedError`](../../api-reference/errors#walletoperationnotsupportederror) will be thrown.
 
 :::
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} = require('@agoralabs-sh/algorand-provider');
+const algosdk = require('algosdk');
+
+try {
+  const encoder = new TextEncoder();
+  const client = new algosdk.Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const multisigParams = {
+    addrs: [
+      'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U', // authorized in wallet and will be used to sign
+      '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ', // authorized in wallet and will be used to sign
+      'TKDBCV4SCSVR2GECXL7NJ5U34PDNLEIMFBTOYVURAPG53OXJLF4LEDSNGE', // not in wallet
+    ],
+    threshold: 1,
+    version: 1,
+  };
+  const multisigAddress = algosdk.multisigAddress(multisigParams);
+  const suggestedParams = await client.getTransactionParams().do();
+  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosdk.algosToMicroalgos(1),
+    from: multisigAddress,
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes = transaction.toByte();
+  const result = await window.algorand.signTxns({
+    txns: [
+      {
+        msig: multisigParams,
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transaction
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} from '@agoralabs-sh/algorand-provider';
+import {
+  algosToMicroalgos,
+  Algodv2,
+  makePaymentTxnWithSuggestedParamsFromObject,
+  MultisigMetadata,
+  multisigAddress,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk';
+
+try {
+  const encoder: TextEncoder = new TextEncoder();
+  const client: Algodv2 = new Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const multisigParams: MultisigMetadata = {
+    addrs: [
+      'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U', // authorized in wallet and will be used to sign
+      '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ', // authorized in wallet and will be used to sign
+      'TKDBCV4SCSVR2GECXL7NJ5U34PDNLEIMFBTOYVURAPG53OXJLF4LEDSNGE', // not in wallet
+    ],
+    threshold: 1,
+    version: 1,
+  };
+  const multisigAddress: string = multisigAddress(multisigParams);
+  const suggestedParams: SuggestedParams = await client.getTransactionParams().do();
+  const transaction: Transaction = makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosToMicroalgos(1),
+    from: multisigAddress,
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes: Uint8Array = transaction.toByte();
+  const result: IBaseResult & ISignTxnsResult = await window.algorand.signTxns({
+    txns: [
+      {
+        msig: multisigParams,
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes: Uint8Array;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transaction
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+In the above example, even though the threshold is 1, because two of the signers are present and authorized in the wallet, both accounts were used to sign the transaction. This still makes the transaction valid.
+
+If you want to only use one address, you can use the `signers` list to instruct the wallet to only use certain addresses to sign the transaction.
+
+```js
+const multisigParams = {
+    addrs: [
+      'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U', // authorized in wallet, but will not be used to sign
+      '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ', // authorized in wallet, will be used to sign
+      'TKDBCV4SCSVR2GECXL7NJ5U34PDNLEIMFBTOYVURAPG53OXJLF4LEDSNGE', // not in wallet
+    ],
+    threshold: 1,
+    version: 1,
+  };
+const result = await window.algorand.signTxns({
+  txns: [
+    {
+      msig: multisigParams,
+      signers: ['6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ'], // specifying a signer instructs the wallet to only use this address to sign
+      txn: 'iaRhZnJ6w...',
+    },
+  ],
+});
+
+console.log(result);
+/*
+{
+  id: 'awesome-wallet',
+  stxns: [
+    'gqNzaWfEQ...',
+  ],
+}
+*/
+```
+
+Now, in the above example, only the address `6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ` is used to sign the transaction and as the threshold is only 1, the transaction is valid.
 
 ## Signing transactions with re-keyed accounts
 
