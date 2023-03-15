@@ -1,3 +1,5 @@
+.docs/
 coverage/
 dist/
+docusaurus.config.js
 node_modules/
