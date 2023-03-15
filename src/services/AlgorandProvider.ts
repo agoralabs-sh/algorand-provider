@@ -5,7 +5,7 @@ import BaseWalletManager from './BaseWalletManager';
 import {
   NoWalletsDetectedError,
   WalletDoesNotExistError,
-  WalletFeatureNotAvailableError,
+  WalletOperationNotSupportedError,
 } from '../errors';
 
 // Types
@@ -182,7 +182,7 @@ export default class AlgorandProvider {
    * transactions that were committed to the blockchain.
    * @throws {NoWalletsDetectedError} if no wallets have been added.
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
-   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the posting of transactions.
+   * @throws {WalletOperationNotSupportedError} if the wallet does not support the posting of transactions.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {FailedToPostSomeTransactionsError} if some transactions were not sent properly.
    */
@@ -194,7 +194,7 @@ export default class AlgorandProvider {
     let result: IPostTxnsResult;
 
     if (!wallet.postTxns) {
-      throw new WalletFeatureNotAvailableError(wallet.id, 'postTxns');
+      throw new WalletOperationNotSupportedError(wallet.id, 'postTxns');
     }
 
     result = await wallet.postTxns?.(postTxnsOptions);
@@ -223,7 +223,7 @@ export default class AlgorandProvider {
    * with the MX prefix.
    * @throws {NoWalletsDetectedError} if no wallets have been added.
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
-   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the signing of data.
+   * @throws {WalletOperationNotSupportedError} if the wallet does not support the signing of data.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {UnauthorizedSignerError} if supplied signer is not authorized by the wallet.
    */
@@ -237,7 +237,7 @@ export default class AlgorandProvider {
     let result: ISignBytesResult;
 
     if (!wallet.signBytes) {
-      throw new WalletFeatureNotAvailableError(wallet.id, 'signBytes');
+      throw new WalletOperationNotSupportedError(wallet.id, 'signBytes');
     }
 
     result = await wallet.signBytes?.(signBytesOptions);
@@ -257,7 +257,7 @@ export default class AlgorandProvider {
    * ready to be posted to the network.
    * @throws {NoWalletsDetectedError} if no wallets have been added.
    * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
-   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the signing of transactions.
+   * @throws {WalletOperationNotSupportedError} if the wallet does not support the signing of transactions.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {UnauthorizedSignerError} if supplied signer is not authorized by the wallet.
    */
@@ -269,7 +269,7 @@ export default class AlgorandProvider {
     let result: ISignTxnsResult;
 
     if (!wallet.signTxns) {
-      throw new WalletFeatureNotAvailableError(wallet.id, 'signTxns');
+      throw new WalletOperationNotSupportedError(wallet.id, 'signTxns');
     }
 
     result = await wallet.signTxns?.(signTxnsOptions);

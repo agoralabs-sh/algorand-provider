@@ -13,7 +13,7 @@ import {
   OperationCanceledError,
   UnauthorizedSignerError,
   WalletDoesNotExistError,
-  WalletFeatureNotAvailableError,
+  WalletOperationNotSupportedError,
 } from '../errors';
 
 // Services
@@ -253,15 +253,19 @@ describe(AlgorandProvider.name, () => {
         });
       } catch (error) {
         // Assert
-        expect((error as WalletFeatureNotAvailableError).code).toBe(
-          ErrorCodeEnum.WalletFeatureNotAvailableError
+        expect((error as WalletOperationNotSupportedError).code).toBe(
+          ErrorCodeEnum.WalletOperationNotSupportedError
+        );
+        expect((error as WalletOperationNotSupportedError).id).toBe(wallet.id);
+        expect((error as WalletOperationNotSupportedError).operation).toBe(
+          'postTxns'
         );
 
         return;
       }
 
       throw new Error(
-        'should have thrown a wallet feature not available error'
+        'should have thrown a wallet operation not supported error'
       );
     });
 
@@ -410,15 +414,19 @@ describe(AlgorandProvider.name, () => {
         });
       } catch (error) {
         // Assert
-        expect((error as WalletFeatureNotAvailableError).code).toBe(
-          ErrorCodeEnum.WalletFeatureNotAvailableError
+        expect((error as WalletOperationNotSupportedError).code).toBe(
+          ErrorCodeEnum.WalletOperationNotSupportedError
+        );
+        expect((error as WalletOperationNotSupportedError).id).toBe(wallet.id);
+        expect((error as WalletOperationNotSupportedError).operation).toBe(
+          'signBytes'
         );
 
         return;
       }
 
       throw new Error(
-        'should have thrown a wallet feature not available error'
+        'should have thrown a wallet operation not supported error'
       );
     });
 
@@ -573,15 +581,19 @@ describe(AlgorandProvider.name, () => {
         });
       } catch (error) {
         // Assert
-        expect((error as WalletFeatureNotAvailableError).code).toBe(
-          ErrorCodeEnum.WalletFeatureNotAvailableError
+        expect((error as WalletOperationNotSupportedError).code).toBe(
+          ErrorCodeEnum.WalletOperationNotSupportedError
+        );
+        expect((error as WalletOperationNotSupportedError).id).toBe(wallet.id);
+        expect((error as WalletOperationNotSupportedError).operation).toBe(
+          'signTxns'
         );
 
         return;
       }
 
       throw new Error(
-        'should have thrown a wallet feature not available error'
+        'should have thrown a wallet operation not supported error'
       );
     });
 

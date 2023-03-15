@@ -6,4 +6,4 @@ export { default as OperationCanceledError } from './OperationCanceledError';
 export { default as UnauthorizedSignerError } from './UnauthorizedSignerError';
 export { default as UnknownError } from './UnknownError';
 export { default as WalletDoesNotExistError } from './WalletDoesNotExistError';
-export { default as WalletFeatureNotAvailableError } from './WalletFeatureNotAvailableError';
+export { default as WalletOperationNotSupportedError } from './WalletOperationNotSupportedError';

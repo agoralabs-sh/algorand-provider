@@ -97,7 +97,7 @@
 |---------------------------------------------------------------------------------|-------------------------------------------------------------------|
 | [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                       | If no wallets have been added.                                    |
 | [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)                     | If the wallet, as specified by its ID, does not exist.            |
-| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror)       | If the wallet does not support the signing of transactions.       |
+| [`WalletOperationNotSupportedError`](errors#walletoperationnotsupportederror)   | If the wallet does not support the signing of transactions.       |
 | [`OperationCanceledError`](errors#operationcancelederror)                       | If the request to sign the transactions was canceled by the user. |
 | [`FailedToPostSomeTransactionsError`](errors#failedtopostsometransactionserror) | If some transactions were not sent properly.                      |
 
@@ -135,13 +135,13 @@
 
 #### Throws
 
-| Type                                                                      | Description                                            |
-|---------------------------------------------------------------------------|--------------------------------------------------------|
-| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                 | If no wallets have been added.                         |
-| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist. |
-| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror) | If the wallet does not support the signing of data.    |
-| [`OperationCanceledError`](errors#operationcancelederror)                 | If the request to sign data was canceled by the user.  |
-| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.    |
+| Type                                                                          | Description                                            |
+|-------------------------------------------------------------------------------|--------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                     | If no wallets have been added.                         |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)                   | If the wallet, as specified by its ID, does not exist. |
+| [`WalletOperationNotSupportedError`](errors#walletoperationnotsupportederror) | If the wallet does not support the signing of data.    |
+| [`OperationCanceledError`](errors#operationcancelederror)                     | If the request to sign data was canceled by the user.  |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)                   | If supplied signer is not authorized by the wallet.    |
 
 ### `signTxns(options)`
 
@@ -161,13 +161,13 @@
 
 #### Throws
 
-| Type                                                                      | Description                                                       |
-|---------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                 | If no wallets have been added.                                    |
-| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist.            |
-| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror) | If the wallet does not support the signing of transactions.       |
-| [`OperationCanceledError`](errors#operationcancelederror)                 | If the request to sign the transactions was canceled by the user. |
-| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.               |
+| Type                                                                          | Description                                                       |
+|-------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                     | If no wallets have been added.                                    |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)                   | If the wallet, as specified by its ID, does not exist.            |
+| [`WalletOperationNotSupportedError`](errors#walletoperationnotsupportederror) | If the wallet does not support the signing of transactions.       |
+| [`OperationCanceledError`](errors#operationcancelederror)                     | If the request to sign the transactions was canceled by the user. |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)                   | If supplied signer is not authorized by the wallet.               |
 
 ## Types
 
