@@ -48,7 +48,7 @@
 
 | Name    | Type                                | Required | Default | Description                                              |
 |---------|-------------------------------------|----------|---------|----------------------------------------------------------|
-| options | [`IEnableOptions`](#enableoptions)  | no       | -       | An object to specify which wallet and network to enable. |
+| options | [`IEnableOptions`](#ienableoptions) | no       | -       | An object to specify which wallet and network to enable. |
 
 #### Returns
 
@@ -169,6 +169,7 @@
 | [`OperationCanceledError`](errors#operationcancelederror)                     | If the request to sign the transactions was canceled by the user.                        |
 | [`UnauthorizedSignerError`](errors#unauthorizedsignererror)                   | If supplied signer is not authorized by the wallet.                                      |
 | [`InvalidGroupIdError`](errors#invalidgroupiderror)                           | If computed group ID for the supplied transactions does not match the assigned group ID. |
+| [`InvalidInputError`](errors#invalidinputerror)                               | If the supplied parameters are malformed.                                                |
 
 ## Types
 

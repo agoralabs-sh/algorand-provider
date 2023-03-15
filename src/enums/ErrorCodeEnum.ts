@@ -7,6 +7,7 @@ enum ErrorCodeEnum {
   UnauthorizedSignerError = 4100,
   WalletOperationNotSupportedError = 4200,
   NetworkNotSupportedError = 4203,
+  InvalidInputError = 4300,
   InvalidGroupIdError = 4301,
   FailedToPostSomeTransactionsError = 4400,
 }

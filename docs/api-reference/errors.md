@@ -11,7 +11,8 @@
 | 4100 | [`UnauthorizedSignerError`](#unauthorizedsignererror)                     | The wallet has not given permission to use a specified signer.                            |
 | 4200 | [`WalletOperationNotSupportedError`](#walletoperationnotsupportederror)   | The wallet does not support this operation.                                               |
 | 4203 | [`NetworkNotSupportedError`](#networknotsupportederror)                   | Network is not supported.                                                                 |
-| 4301 | [`InvalidGroupIdError`](#invalidgroupiderror)                             | The computed group ID of the atomic transactions is different from teh assigned group ID. |
+| 4300 | [`InvalidInputError`](#invalidinputerror)                                 | The input for signing transactions is malformed.                                          |
+| 4301 | [`InvalidGroupIdError`](#invalidgroupiderror)                             | The computed group ID of the atomic transactions is different from the assigned group ID. |
 | 4400 | [`FailedToPostSomeTransactionsError`](#failedtopostsometransactionserror) | When some transactions were not sent properly.                                            |
 
 ## `UnknownError`
@@ -95,6 +96,17 @@ This error is thrown when a provided genesis hash is not supported by the wallet
 | code        | `number` | 4203  | A canonical code for this error.                       |
 | genesisHash | `string` | -     | The genesis hash of the network that is not supported. |
 | message     | `string` | -     | A human readable message.                              |
+
+## `InvalidInputError`
+
+This error is thrown when the wallet attempts to sign transaction(s) but the input is malformed.
+
+#### Properties
+
+| Name            | Type     | Value | Description                                          |
+|-----------------|----------|-------|------------------------------------------------------|
+| code            | `number` | 4300  | A canonical code for this error.                     |
+| message         | `string` | -     | A human readable message.                            |
 
 ## `InvalidGroupIdError`
 
