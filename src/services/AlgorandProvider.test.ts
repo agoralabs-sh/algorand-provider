@@ -354,7 +354,7 @@ describe(AlgorandProvider.name, () => {
           id: wallet.id,
           txns: [
             {
-              txn: new Uint8Array(randomBytes(32)),
+              txn: randomBytes(32).toString('base64'),
             },
           ],
         });
@@ -380,7 +380,7 @@ describe(AlgorandProvider.name, () => {
           id: faker.datatype.uuid(), // use some random id
           txns: [
             {
-              txn: new Uint8Array(randomBytes(32)),
+              txn: randomBytes(32).toString('base64'),
             },
           ],
         });
@@ -406,7 +406,7 @@ describe(AlgorandProvider.name, () => {
           id: wallet.id,
           txns: [
             {
-              txn: new Uint8Array(randomBytes(32)),
+              txn: randomBytes(32).toString('base64'),
             },
           ],
         });
@@ -439,7 +439,7 @@ describe(AlgorandProvider.name, () => {
           id: wallet.id,
           txns: [
             {
-              txn: new Uint8Array(randomBytes(32)),
+              txn: randomBytes(32).toString('base64'),
             },
           ],
         });

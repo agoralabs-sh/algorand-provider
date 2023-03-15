@@ -1,11 +1,11 @@
 // Types
-import ISignTransaction from './ISignTransaction';
+import IWalletTransaction from './IWalletTransaction';
 
 /**
- * @property {ISignTransaction[]} txns - a list of transactions to be signed.
+ * @property {IWalletTransaction[]} txns - a list of transactions to be signed.
  */
 interface ISignTxnsOptions {
-  txns: ISignTransaction[];
+  txns: IWalletTransaction[];
 }
 
 export default ISignTxnsOptions;

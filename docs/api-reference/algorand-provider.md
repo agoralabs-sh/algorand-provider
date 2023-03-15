@@ -13,10 +13,10 @@
   * [`IEnableResult`](#ienableresult)
   * [`ISignBytesOptions`](#isignbytesoptions)
   * [`ISignBytesResult`](#isignbytesresult)
-  * [`ISignTransaction`](#isigntransaction)
   * [`ISignTxnsOptions`](#isignbytesoptions)
   * [`ISignTxnsResult`](#isignbytesresult)
   * [`IWalletAccount`](#iwalletaccount)
+  * [`IWalletTransaction`](#iwallettransaction)
 
 ## Methods
 
@@ -181,29 +181,19 @@
 | id          | `string`                              | yes      | -       | The ID of the wallet that was used.                  |
 | signature   | `Uint8Array`                          | yes      | -       | The signature of the signed data with the MX prefix. |
 
-### `ISignTransaction`
-
-| Name                                                                                                                                       | Type                                                                                              | Required | Default | Description                                                                                                                                                                                                             |
-|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| authAddr                                                                                                                                   | `string`                                                                                          | no       | -       | The auth address if the sender has rekeyed.                                                                                                                                                                             |
-| msig                                                                                                                                       | [`MultisigMetadata`](https://algorand.github.io/js-algorand-sdk/interfaces/MultisigMetadata.html) | no       | -       | Extra metadata needed when sending multisig transactions.                                                                                                                                                               |
-| signers                                                                                                                                    | `string[]`                                                                                        | no       | -       | A list of addresses to sign with (defaults to the sender in the transaction).                                                                                                                                           |
-| stxn                                                                                                                                       | `Uint8Array`                                                                                      | no       | -       | If this is part of a group of transactions, some of which are already signed you must also provide these signed transactions, as per [ARC-0001](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0001.md). |                                                                                                   |          |         |                                                                               |
-| txn                                                                                                                                        | `Uint8Array`                                                                                      | yes      | -       | The unsigned transaction.                                                                                                                                                                                               |
-
 ### `ISignTxnsOptions`
 
-| Name   | Type                                      | Required | Default | Description                                                                                                                                       |
-|--------|-------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| id     | `string`                                  | no       | -       | The ID of the wallet to use to sign the transactions. If none is specified, then the default wallet is used.                                      |
-| txns   | [`ISignTransaction[]`](#isigntransaction) | yes      | -       | A list of transactions to be signed as well as extra data used; if any accounts are re-keyed, are multisig or is part of a group of transactions. |
+| Name | Type                                          | Required | Default | Description                                                                                                                                       |
+|------|-----------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| id   | `string`                                      | no       | -       | The ID of the wallet to use to sign the transactions. If none is specified, then the default wallet is used.                                      |
+| txns | [`IWalletTransaction[]`](#iwallettransaction) | yes      | -       | A list of transactions to be signed as well as extra data used; if any accounts are re-keyed, are multisig or is part of a group of transactions. |
 
 ### `ISignTxnsResult`
 
-| Name  | Type           | Required | Default | Description                                                                |
-|-------|----------------|----------|---------|----------------------------------------------------------------------------|
-| id    | `string`       | yes      | -       | The ID of the wallet that was used.                                        |
-| stxns | `Uint8Array[]` | yes      | -       | The list of signed transactions that is ready to be posted to the network. |
+| Name  | Type       | Required | Default | Description                                                                               |
+|-------|------------|----------|---------|-------------------------------------------------------------------------------------------|
+| id    | `string`   | yes      | -       | The ID of the wallet that was used.                                                       |
+| stxns | `string[]` | yes      | -       | The list of base64 encoded signed transactions that is ready to be posted to the network. |
 
 ### `IWalletAccount`
 
@@ -211,3 +201,13 @@
 |---------|----------|----------|---------|------------------------------------------|
 | address | `string` | yes      | -       | The address (public key) of the account. |
 | name    | `string` | no       | -       | A human-readable name for this account.  |
+
+### `IWalletTransaction`
+
+| Name                                                                                                                                                                                                                      | Type                                                                                              | Required | Default | Description                                                                                                                                                                                                                                                                                            |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|----------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| authAddr                                                                                                                                                                                                                  | `string`                                                                                          | no       | -       | The auth address if the sender has rekeyed.                                                                                                                                                                                                                                                            |
+| msig                                                                                                                                                                                                                      | [`MultisigMetadata`](https://algorand.github.io/js-algorand-sdk/interfaces/MultisigMetadata.html) | no       | -       | Extra metadata needed when sending multisig transactions.                                                                                                                                                                                                                                              |
+| signers                                                                                                                                                                                                                   | `string[]`                                                                                        | no       | -       | A list of addresses to sign with (defaults to the sender in the transaction).                                                                                                                                                                                                                          |
+| stxn                                                                                                                                                                                                                      | `string`                                                                                          | no       | -       | If this is part of a group of transactions, some of which are already signed you must also provide these signed transactions and the signers array MUST be undefined or empty, as per [ARC-0001](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0001.md#semantic-of-wallettransaction). |                                                                                                   |          |         |                                                                               |
+| txn                                                                                                                                                                                                                       | `string`                                                                                          | yes      | -       | The base64 encoded unsigned transaction.                                                                                                                                                                                                                                                               |
