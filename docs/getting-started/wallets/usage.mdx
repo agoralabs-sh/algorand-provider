@@ -3,9 +3,9 @@ import TabItem from '@theme/TabItem';
 
 # Initialization
 
-In order for dApps to interact wallets, the dApp will you use the `window.algorand` object.
+In order for dApps to interact with wallets, the dApp will you use the `window.algorand` object.
 
-When injecting a wallet interface, it maybe necessary to create the `window.algorand` object:
+When initializing a wallet interface, it maybe necessary to create the `window.algorand` object:
 
 <Tabs
   defaultValue="javascript"
@@ -43,7 +43,7 @@ As `window.algorand` is a global object and could possibly be overridden, so it 
 
 :::
 
-Next, a wallet manager will need to be created, conforming to the [`BaseWalletManager`](../../api-reference/base-wallet-manager), and can be added to the `window.algorand` provider:
+Next, a wallet manager will need to be created, conforming to the [`BaseWalletManager`](../../api-reference/base-wallet-manager) class. Then this manager can be added to the `window.algorand` provider:
 
 <Tabs
   defaultValue="javascript"
