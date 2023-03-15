@@ -1,0 +1,544 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Signing Transactions
+
+* [Overview](#overview)
+* [Signing a single transaction](#signing-a-single-transaction)
+* [Signing atomic transactions](#signing-atomic-transactions)
+  * [Non-wallet signed transactions](#non-wallet-signed-transactions)
+* [Signing transactions with multisig accounts](#signing-transactions-with-multisig-accounts)
+* [Signing transactions with re-keyed accounts](#signing-transactions-with-re-keyed-accounts)
+
+## Overview
+
+Wallets, if supported can sign single, atomic or multiple transactions. If the wallet also supports it, the wallet can also sign transactions using multisigs and re-keyed accounts.
+
+## Signing a single transaction
+
+Regardless of whether you are sending multiple transactions or a single transaction, an array of base64 encoded transactions will need to be sent.
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} = require('@agoralabs-sh/algorand-provider');
+const algosdk = require('algosdk');
+
+try {
+  const encoder = new TextEncoder();
+  const client = new algosdk.Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams = await client.getTransactionParams().do();
+  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosdk.algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes = transaction.toByte();
+  const result = await window.algorand.signTxns({
+    txns: [
+      {
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transactions
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} from '@agoralabs-sh/algorand-provider';
+import {
+  algosToMicroalgos,
+  Algodv2,
+  makePaymentTxnWithSuggestedParamsFromObject,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk';
+
+try {
+  const encoder: TextEncoder = new TextEncoder();
+  const client: Algodv2 = new Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams: SuggestedParams = await client.getTransactionParams().do();
+  const transaction: Transaction = makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes: Uint8Array = transaction.toByte();
+  const result: IBaseResult & ISignTxnsResult = await window.algorand.signTxns({
+    txns: [
+      {
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes: Uint8Array;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transactions
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If this operation is not supported, then a [`WalletOperationNotSupportedError`](../../api-reference/errors#walletoperationnotsupportederror) will be thrown.
+
+:::
+
+## Signing atomic transactions
+
+When sending atomic transactions, all transactions, regardless of whether the wallet is signing only some of the transactions, must be sent with a matching group ID.
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} = require('@agoralabs-sh/algorand-provider');
+const algosdk = require('algosdk');
+
+try {
+  const encoder = new TextEncoder();
+  const client = new algosdk.Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams = await client.getTransactionParams().do();
+  const firstTransaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosdk.algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('I am the first transaction, human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const secondTransaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosdk.algosToMicroalgos(2),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('I am the second transaction, human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  let firstTransactionBytes;
+  let result;
+  let secondTransactionBytes;
+  let signedTransactionBytes;
+
+  // assign a group id
+  algosdk.assignGroupID([firstTransaction, secondTransaction]);
+
+  firstTransactionBytes = firstTransaction.toByte();
+  secondTransactionBytes = secondTransaction.toByte();
+
+  // send to the wallet to be signed
+  result = await window.algorand.signTxns({
+    txns: [
+      {
+        txn: bytesToBase64(firstTransactionBytes),
+      },
+      {
+        txn: bytesToBase64(secondTransactionBytes),
+      },
+    ],
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transactions
+  signedTransactionBytes = result.stxns.map((value) => base64ToBytes(value));
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} from '@agoralabs-sh/algorand-provider';
+import {
+  algosToMicroalgos,
+  Algodv2,
+  assignGroupID,
+  makePaymentTxnWithSuggestedParamsFromObject,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk';
+
+try {
+  const encoder: TextEncoder = new TextEncoder();
+  const client: Algodv2 = new Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams: SuggestedParams = await client.getTransactionParams().do();
+  const firstTransaction: Transaction = makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('I am the first transaction, human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const secondTransaction: Transaction = makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosToMicroalgos(2),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+    note: encoder.encode('I am the second transaction, human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes: Uint8Array = transaction.toByte();
+  let firstTransactionBytes: Uint8Array;
+  let result: IBaseResult & ISignTxnsResult;
+  let secondTransactionBytes: Uint8Array;
+  let signedTransactionBytes: Uint8Array[];
+
+  // assign a group id
+  assignGroupID([firstTransaction, secondTransaction]);
+
+  firstTransactionBytes = firstTransaction.toByte();
+  secondTransactionBytes = secondTransaction.toByte();
+
+  // send to the wallet to be signed
+  result = await window.algorand.signTxns({
+    txns: [
+      {
+        txn: bytesToBase64(firstTransactionBytes),
+      },
+      {
+        txn: bytesToBase64(secondTransactionBytes),
+      },
+    ],
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transactions
+  signedTransactionBytes = result.stxns.map((value) => base64ToBytes(value));
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### Non-wallet signed transactions
+
+In the case of a wallet being sent an atomic transaction, but only needing to sign a subset of the transactions, an empty `signers` array must be used. This instructs the wallet to skip the transaction even if it can sign it.
+
+For example:
+
+```js
+const result = await window.algorand.signTxns({
+  txns: [
+    {
+      txn: 'iqNhbXRko...',
+    },
+    {
+      signers: [], // an empty array instructs the wallet to skip signing this transaction
+      txn: 'iaRhZnJ6w...',
+    },
+  ],
+});
+
+console.log(result);
+/*
+{
+  id: 'awesome-wallet',
+  stxns: [
+    'gqNzaWfEQ...',
+    null,
+  ],
+}
+*/
+
+```
+
+As you can see from the above example, when the wallet skips signing that transaction, the resulting signed transaction list contains `null` where the transactions were not signed. In order to avoid this, you can supply the signed transaction (`stxn`) to the options object, when signing the transactions:
+
+```js
+const result = await window.algorand.signTxns({
+  txns: [
+    {
+      txn: 'iqNhbXRko...',
+    },
+    {
+      signers: [], // an empty array instructs the wallet to skip signing this transaction
+      stxn: 'gqNzaWfEQ...', // providing the signed transaction will pass it to the result
+      txn: 'iaRhZnJ6w...',
+    },
+  ],
+});
+
+console.log(result);
+/*
+{
+  id: 'awesome-wallet',
+  stxns: [
+    'gqNzaWfEQ...',
+    'gqNzaWfEQ...'
+  ],
+}
+*/
+
+```
+
+## Signing transactions with multisig accounts
+
+:::caution
+
+The wallet may not support multisig accounts, in which case a [`WalletOperationNotSupportedError`](../../api-reference/errors#walletoperationnotsupportederror) will be thrown.
+
+:::
+
+## Signing transactions with re-keyed accounts
+
+When attempting to sign a transaction using a re-keyed account, the `authAddr` field may be used to instruct the wallet to use as the signer of the transaction. Supplying the `authAddr` will override the sender address of the transaction field.
+
+:::caution
+
+The wallet may not support re-keyed accounts, in which case a [`WalletOperationNotSupportedError`](../../api-reference/errors#walletoperationnotsupportederror) will be thrown.
+
+:::
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} = require('@agoralabs-sh/algorand-provider');
+const algosdk = require('algosdk');
+
+try {
+  const encoder = new TextEncoder();
+  const client = new algosdk.Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams = await client.getTransactionParams().do();
+  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosdk.algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U', // the re-keyed account
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes = transaction.toByte();
+  const result = await window.algorand.signTxns({
+    txns: [
+      {
+        authAddr: 'S6V2ITXD3Q4MYATTN5IH75E3KS3WEMB36SVG2LXCQ3XESSH2DYOC3DAXYU', // 'auth-addr' of the re-keyed account
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transactions
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import {
+  base64ToBytes,
+  bytesToBase64,
+  IBaseResult,
+  ISignTxnsResult,
+} from '@agoralabs-sh/algorand-provider';
+  import {
+  algosToMicroalgos,
+  Algodv2,
+  makePaymentTxnWithSuggestedParamsFromObject,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk';
+
+try {
+  const encoder: TextEncoder = new TextEncoder();
+  const client: Algodv2 = new Algodv2(
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'http://localhost',
+    '4001',
+  );
+  const suggestedParams: SuggestedParams = await client.getTransactionParams().do();
+  const transaction: Transaction = makePaymentTxnWithSuggestedParamsFromObject({
+    amount: algosToMicroalgos(1),
+    from: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U', // the re-keyed account
+    note: encoder.encode('Hello Human!'),
+    suggestedParams,
+    to: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+  });
+  const transactionBytes: Uint8Array = transaction.toByte();
+  const result: IBaseResult & ISignTxnsResult = await window.algorand.signTxns({
+    txns: [
+      {
+        authAddr: 'S6V2ITXD3Q4MYATTN5IH75E3KS3WEMB36SVG2LXCQ3XESSH2DYOC3DAXYU', // 'auth-addr' of the re-keyed account
+        txn: bytesToBase64(transactionBytes),
+      },
+    ],
+  });
+  let signedTransactionBytes: Uint8Array;
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    stxns: [
+      'gqNzaWfEQ...',
+    ],
+  }
+  */
+
+  // decode the base 64 encoded signed transaction
+  signedTransactionBytes = base64ToBytes(result.stxns[0]);
+
+  // send to the network
+  await client.sendRawTransaction(signedTransactionBytes).do();
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If the supplied `authAddr` is not an authorized signer, then a [`UnauthorizedSignerError`](../../api-reference/errors#unauthorizedsignererror) will be thrown.
+
+:::

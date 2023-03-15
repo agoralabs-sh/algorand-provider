@@ -12,7 +12,8 @@ const sidebars = {
           items: [
             'getting-started/dapps/initialization',
             'getting-started/dapps/enabling-a-wallet',
-            // 'getting-started/dapps/signing-transactions',
+            'getting-started/dapps/signing-transactions',
+            'getting-started/dapps/sending-transactions',
             'getting-started/dapps/signing-data',
           ],
         },
@@ -21,7 +22,7 @@ const sidebars = {
           label: 'Wallets',
           items: [
             'getting-started/wallets/installation',
-            'getting-started/wallets/initialization',
+            'getting-started/wallets/usage',
           ],
         },
       ],

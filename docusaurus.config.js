@@ -125,6 +125,10 @@ const config = {
                 label: 'API Reference',
                 to: 'api-reference',
               },
+              {
+                label: 'Compatibility',
+                to: 'compatibility',
+              },
             ],
           },
           {
