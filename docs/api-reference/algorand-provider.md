@@ -107,9 +107,9 @@
 
 #### Parameters
 
-| Name    | Type     | Required | Default | Description                             |
-|---------|----------|----------|---------|-----------------------------------------|
-| id      | `string` | yes      | -       | The ID of the wallet to set to default. |
+| Name | Type     | Required | Default | Description                             |
+|------|----------|----------|---------|-----------------------------------------|
+| id   | `string` | yes      | -       | The ID of the wallet to set to default. |
 
 #### Returns
 
@@ -197,10 +197,10 @@
 
 ### `IPostTxnsOptions`
 
-| Name   | Type       | Required  | Default | Description                                                                                                   |
-|--------|------------|-----------|---------|---------------------------------------------------------------------------------------------------------------|
-| id     | `string`   | no        | -       | The ID of the wallet to use to post the transactions. If none is specified, then the default wallet is used.  |
-| stxns  | `string[]` | yes       | -       | A list of base64 encoded signed transactions to be sent to the network.                                       |
+| Name  | Type       | Required  | Default | Description                                                                                                   |
+|-------|------------|-----------|---------|---------------------------------------------------------------------------------------------------------------|
+| id    | `string`   | no        | -       | The ID of the wallet to use to post the transactions. If none is specified, then the default wallet is used.  |
+| stxns | `string[]` | yes       | -       | A list of base64 encoded signed transactions to be sent to the network.                                       |
 
 ### `IPostTxnsResult`
 
@@ -219,10 +219,10 @@
 
 ### `ISignBytesResult`
 
-| Name        | Type                                  | Required | Default | Description                                          |
-|-------------|---------------------------------------|----------|---------|------------------------------------------------------|
-| id          | `string`                              | yes      | -       | The ID of the wallet that was used.                  |
-| signature   | `Uint8Array`                          | yes      | -       | The signature of the signed data with the MX prefix. |
+| Name      | Type                                  | Required | Default | Description                                          |
+|-----------|---------------------------------------|----------|---------|------------------------------------------------------|
+| id        | `string`                              | yes      | -       | The ID of the wallet that was used.                  |
+| signature | `Uint8Array`                          | yes      | -       | The signature of the signed data with the MX prefix. |
 
 ### `ISignTxnsOptions`
 
