@@ -23,7 +23,7 @@ It should be safe to call [`enable()`](../../api-reference/algorand-provider#ena
 
 :::caution
 
-The definition of "enabling" a wallet can mean different things to different wallets, but it is highly recommended that you first run [`enable()`](../../api-reference/algorand-provider#enableoptions) before attempting any other methods.
+The definition of "enabling" a wallet can mean different things to different wallets, but it is highly recommended that you first run [`enable()`](../../api-reference/algorand-provider#enableoptions) before attempting any other operations.
 
 :::
 
@@ -58,7 +58,8 @@ try {
     ],
     genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
     genesisId: 'mainnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -70,10 +71,10 @@ try {
   <TabItem value="typescript">
 
 ```typescript
-import type { AlgorandProvider, IEnableResult } from '@agoralabs-sh/algorand-provider'
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
 
 try {
-  const result: IEnableResult = await (window.algorand as AlgorandProvider).enable();
+  const result: IBaseResult & IEnableResult = await window.algorand.enable();
 
   console.log(result);
   /*
@@ -90,7 +91,8 @@ try {
     ],
     genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
     genesisId: 'mainnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -103,7 +105,7 @@ try {
 
 :::caution
 
-If no wallets does exist, then a [`NoWalletsDetectedError`](../../api-reference/errors#4001-nowalletsdetectederror) will be thrown.
+If no wallets does exist, then a [`NoWalletsDetectedError`](../../api-reference/errors#nowalletsdetectederror) will be thrown.
 
 :::
 
@@ -122,7 +124,7 @@ If you want to target a specific wallet, you can simply pass the ID of the walle
 ```js
 try {
   const result = await window.algorand.enable({
-    id: 'agora-wallet',
+    id: 'another-awesome-wallet',
   });
 
   console.log(result);
@@ -140,7 +142,8 @@ try {
     ],
     genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
     genesisId: 'mainnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'another-awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -152,11 +155,11 @@ try {
   <TabItem value="typescript">
 
 ```typescript
-import type { AlgorandProvider, IEnableResult } from '@agoralabs-sh/algorand-provider'
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
 
 try {
-  const result: IEnableResult = await (window.algorand as AlgorandProvider).enable({
-    id: 'agora-wallet',
+  const result: IBaseResult & IEnableResult = await window.algorand.enable({
+    id: 'another-awesome-wallet',
   });
 
   console.log(result);
@@ -174,7 +177,8 @@ try {
     ],
     genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
     genesisId: 'mainnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'another-awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -187,7 +191,7 @@ try {
 
 :::caution
 
-If the specified wallet does not exist, then a [`WalletDoesNotExistError`](../../api-reference/errors#4002-walletdoesnotexisterror) will be thrown.
+If the specified wallet does not exist, then a [`WalletDoesNotExistError`](../../api-reference/errors#walletdoesnotexisterror) will be thrown.
 
 :::
 
@@ -224,7 +228,8 @@ try {
     ],
     genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
     genesisId: 'testnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -236,10 +241,10 @@ try {
   <TabItem value="typescript">
 
 ```typescript
-import type { AlgorandProvider, IEnableResult } from '@agoralabs-sh/algorand-provider'
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
 
 try {
-  const result: IEnableResult = await (window.algorand as AlgorandProvider).enable({
+  const result: IBaseResult & IEnableResult = await window.algorand.enable({
     genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
   });
 
@@ -258,7 +263,8 @@ try {
     ],
     genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
     genesisId: 'testnet-v1.0',
-    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8';
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
   }
   */
 } catch (error) {
@@ -271,6 +277,6 @@ try {
 
 :::caution
 
-If the specified network is not supported, then a [`NetworkNotSupportedError`](../../api-reference/errors#4102-networknotsupportederror) will be thrown.
+If the specified network is not supported, then a [`NetworkNotSupportedError`](../../api-reference/errors#networknotsupportederror) will be thrown.
 
 :::

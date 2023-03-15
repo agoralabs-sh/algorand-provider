@@ -1,0 +1,257 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem'; import {AlgorandProvider} from '../../../src';
+
+# Signing Data
+
+* [Overview](#overview)
+* [Signing with the default wallet](#signing-with-the-default-wallet)
+* [Signing with a specific wallet](#signing-with-a-specific-wallet)
+* [Signing with a specific account](#signing-with-a-specific-account)
+* [Verifying the signature](#verifying-the-signature)
+
+## Overview
+
+Wallets, if supported, can sign some arbitrary data that can be verified via the [algosdk.verifyBytes](https://algorand.github.io/js-algorand-sdk/functions/verifyBytes.html) method.
+
+## Signing with the default wallet
+
+If you only want to sign data with the default wallet, you can simply call:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, ISignBytesResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & ISignBytesResult = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If this operation is not supported, then a [`WalletOperationNotSupportedError`](../../api-reference/errors#walletoperationnotsupportederror) will be thrown.
+
+:::
+
+## Signing with a specific wallet
+
+If you want to target a specific wallet to sign data, you can simply pass the ID of the wallet to the options object:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+    id: 'another-awesome-wallet',
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'another-awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, ISignBytesResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & ISignBytesResult = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+    id: 'another-awesome-wallet',
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'another-awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If the specified wallet does not exist, then a [`WalletDoesNotExistError`](../../api-reference/errors#walletdoesnotexisterror) will be thrown.
+
+:::
+
+## Signing with a specific account
+
+If you want to specify which account to use, you can pass the signer in the options object:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+    signer: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, ISignBytesResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & ISignBytesResult = await window.algorand.signBytes({
+    data: new Uint8Array([...]),
+    signer: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+  });
+
+  console.log(result);
+  /*
+  {
+    id: 'awesome-wallet',
+    signature: [23, 54, 65 ...],
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If the user has not authorized the specified signer or the signer does not exist in the wallet, then a [`UnauthorizedSignerError`](../../api-reference/errors#unauthorizedsignererror) will be thrown.
+
+:::
+
+## Verifying the signature
+
+Once the data has been signed, you can use the [algosdk.verifyBytes](https://algorand.github.io/js-algorand-sdk/functions/verifyBytes.html) function to verify that the data has been signed using the private key.
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const algosdk = require('algosdk);
+
+const data = new Uint8Array([...]);
+const signer = 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U';
+const result = await window.algorand.signBytes({
+  data,
+  signer,
+});
+
+if (!algosdk.verifyBytes(data, result.signature, signer)) {
+  throw new Error('invalid signature!!');
+}
+
+console.log('data has been verified!');
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, ISignBytesResult } from '@agoralabs-sh/algorand-provider';
+import { verifyBytes } from 'algosdk';
+
+const data: Uint8Array = new Uint8Array([...]);
+const signer: string = 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U';
+const result: IBaseResult & ISignBytesResult = await window.algorand.signBytes({
+  data,
+  signer,
+});
+
+if (!verifyBytes(data, result.signature, signer)) {
+  throw new Error('invalid signature!!');
+}
+
+console.log('data has been verified!');
+```
+
+  </TabItem>
+</Tabs>
