@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 // Directories
 const docsDir = path.resolve(__dirname, 'docs');
-const assetsDir = path.resolve(docsDir, 'assets');
+const staticDir = path.resolve(docsDir, 'static');
 const scriptsDir = path.resolve(docsDir, 'scripts');
 const stylesDir = path.resolve(docsDir, 'styles');
 
@@ -25,6 +25,8 @@ const config = {
   baseUrl: '/',
   organizationName: 'agoralabs-sh',
   projectName: 'algorand-provider',
+  deploymentBranch: 'gh-pages',
+  trailingSlash: false,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
   onDuplicateRoutes: 'throw',
@@ -60,7 +62,7 @@ const config = {
     ],
   ],
 
-  staticDirectories: [assetsDir],
+  staticDirectories: [staticDir],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
