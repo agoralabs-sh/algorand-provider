@@ -1,7 +1,7 @@
 {
   "name": "@agoralabs-sh/algorand-provider",
   "version": "1.0.0",
-  "description": "Algorand provider is an interface that bridges the gap between to allow dApps to connect, and interact, with wallets in a standardized way",
+  "description": "Algorand provider is an interface that bridges the gap allowing dApps to connect, and interact, with wallets in a standardized way",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,13 +18,13 @@
     "email": "kieran@agoralabs.sh",
     "url": "https://github.com/kieranroneill"
   },
-  "license": "GPL-2.0-or-later",
+  "license": "MIT",
   "keywords": [
     "algorand",
     "algosdk",
     "blockchain"
   ],
-  "private": true,
+  "private": false,
   "engines": {
     "node": ">=16.14.0"
   },
