@@ -9,6 +9,7 @@ import { ErrorCodeEnum } from '../enums';
 import {
   FailedToPostSomeTransactionsError,
   InvalidGroupIdError,
+  InvalidInputError,
   NetworkNotSupportedError,
   NoWalletsDetectedError,
   OperationCanceledError,
@@ -29,6 +30,7 @@ import {
   IPostTxnsResult,
   ISignBytesOptions,
   ISignBytesResult,
+  ISignTxnsResult,
 } from '../types';
 
 class TestWalletManager extends BaseWalletManager {
@@ -629,7 +631,7 @@ describe(AlgorandProvider.name, () => {
       throw new Error('should have thrown an operation canceled error');
     });
 
-    it.only('should throw an error if the computed group id is invalid', async () => {
+    it('should throw an error if the computed group id is invalid', async () => {
       // Arrange
       const computedGroupId: string = randomBytes(32).toString('base64');
 
@@ -664,6 +666,63 @@ describe(AlgorandProvider.name, () => {
       }
 
       throw new Error('should have thrown an invalid group id error');
+    });
+
+    it('should throw an error if the input is invalid', async () => {
+      // Arrange
+      wallet.signTxns = () =>
+        Promise.reject(new InvalidInputError('"txn" object malformed'));
+
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.signTxns({
+          id: wallet.id,
+          txns: [
+            {
+              txn: randomBytes(32).toString('base64'),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as InvalidGroupIdError).code).toBe(
+          ErrorCodeEnum.InvalidInputError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown an invalid input error');
+    });
+
+    it('should sign transactions', async () => {
+      // Arrange
+      const stxns: string[] = [randomBytes(32).toString('base64')];
+      let result: IBaseResult & ISignTxnsResult;
+
+      wallet.signTxns = () =>
+        Promise.resolve({
+          id: wallet.id,
+          stxns,
+        });
+
+      algorandProvider.addWallet(wallet);
+
+      // Act
+      result = await algorandProvider.signTxns({
+        id: wallet.id,
+        txns: [
+          {
+            txn: randomBytes(32).toString('base64'),
+          },
+        ],
+      });
+
+      // Assert
+      expect(result.id).toBe(wallet.id);
+      expect(result.stxns).toEqual(stxns);
     });
   });
 });
