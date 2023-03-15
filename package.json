@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "docs:build": "docusaurus build",
+    "docs:build": "docusaurus build --out-dir .docs",
     "docs:start": "docusaurus start",
     "lint": "eslint . --ext .ts --ext .js",
     "prepare": "husky install",

@@ -274,6 +274,9 @@ fabric.properties
 
 ### Miscellaneous
 
+# documentation
+.docs
+
 # dependencies
 .npmrc
 /.pnp
