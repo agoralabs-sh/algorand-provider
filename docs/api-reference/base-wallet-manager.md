@@ -180,9 +180,9 @@ This function is optional.
 
 ### `ISignTxnsResult`
 
-| Name  | Type       | Required | Default | Description                                                                               |
-|-------|------------|----------|---------|-------------------------------------------------------------------------------------------|
-| stxns | `string[]` | yes      | -       | The list of base64 encoded signed transactions that is ready to be posted to the network. |
+| Name  | Type                                 | Required | Default | Description                                                                                                                                                                                                                                 |
+|-------|--------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| stxns | <code>(string  &#124; null)[]</code> | yes      | -       | The list of base64 encoded signed transactions that is ready to be posted to the network. If any of the transactions were not signed by the wallet, and no `stxns` were supplied, then null will be in the place of the signed transaction. |
 
 ### `IWalletAccount`
 
