@@ -3,6 +3,8 @@ import {
   IEnableOptions,
   IEnableResult,
   INewBaseWalletManagerOptions,
+  IPostTxnsOptions,
+  IPostTxnsResult,
   ISignBytesOptions,
   ISignBytesResult,
   ISignTxnsOptions,
@@ -26,6 +28,15 @@ export default abstract class BaseWalletManager {
    * @throws {OperationCanceledError} if the connect request was denied by the user.
    */
   public abstract enable(options?: IEnableOptions): Promise<IEnableResult>;
+
+  /**
+   * Posts a list of signed transactions to the network.
+   * @param {IPostTxnsOptions} options - an object containing the signed transactions to be sent to the network.
+   * @returns {IPostTxnsResult} an object containing the IDs of the transactions that were committed to the blockchain.
+   * @throws {OperationCanceledError} if the request was denied by the user.
+   * @throws {FailedToPostSomeTransactionsError} if some transactions were not sent properly.
+   */
+  public postTxns?(options: IPostTxnsOptions): Promise<IPostTxnsResult>;
 
   /**
    * Signs an arbitrary piece of data. The returned signature can be verified using

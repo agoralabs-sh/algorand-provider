@@ -4,6 +4,7 @@
   * [`addWallet(wallet, [options])`](#addwalletwallet-options)
   * [`enable([options])`](#enableoptions)
   * [`getWallets()`](#getwallets)
+  * [`postTxns(options)`](#posttxnsoptions)
   * [`setDefaultWallet(id)`](#setdefaultwalletid)
   * [`signBytes(options)`](#signbytesoptions)
   * [`signTxns(options)`](#signtxnsoptions)
@@ -11,6 +12,8 @@
   * [`IAddWalletOptions`](#iaddwalletoptions)
   * [`IEnableOptions`](#ienableoptions)
   * [`IEnableResult`](#ienableresult)
+  * [`IPostTxnsOptions`](#iposttxnsoptions)
+  * [`IPostTxnsResult`](#iposttxnsresult)
   * [`ISignBytesOptions`](#isignbytesoptions)
   * [`ISignBytesResult`](#isignbytesresult)
   * [`ISignTxnsOptions`](#isignbytesoptions)
@@ -55,12 +58,12 @@
 
 #### Throws
 
-| Type                                                               | Description                                                                       |
-|--------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [`NoWalletsDetectedError`](errors#4001-nowalletsdetectederror)     | If no wallets have been added.                                                    |
-| [`WalletDoesNotExistError`](errors#4002-walletdoesnotexisterror)   | If the wallet, as specified by its ID, does not exist.                            |
-| [`OperationCanceledError`](errors#4101-operationcancelederror)     | If the request to enable the wallet was denied by the user.                       |
-| [`NetworkNotSupportedError`](errors#4102-networknotsupportederror) | If the network, as specified by the genesis hash, is not supported by the wallet. |
+| Type                                                          | Description                                                                       |
+|---------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)     | If no wallets have been added.                                                    |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)   | If the wallet, as specified by its ID, does not exist.                            |
+| [`OperationCanceledError`](errors#operationcancelederror)     | If the request to enable the wallet was denied by the user.                       |
+| [`NetworkNotSupportedError`](errors#networknotsupportederror) | If the network, as specified by the genesis hash, is not supported by the wallet. |
 
 ### `getWallets()`
 
@@ -71,6 +74,32 @@
 | Type       | Description               |
 |------------|---------------------------|
 | `string[]` | A list of the wallet IDs. |
+
+### `postTxns(options)`
+
+> Posts a list of signed transactions to the network.
+
+#### Parameters
+
+| Name    | Type                                    | Required | Default | Description                                                                                        |
+|---------|-----------------------------------------|----------|---------|----------------------------------------------------------------------------------------------------|
+| options | [`IPostTxnsOptions`](#iposttxnsoptions) | yes      | -       | An object containing the wallet information and the signed transactions to be sent to the network. |
+
+#### Returns
+
+| Type                                           | Description                                                                                                        |
+|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| Promise<[`IPostTxnsResult`](#iposttxnsresult)> | An object containing the wallet information and the IDs of the transactions that were committed to the blockchain. |
+
+#### Throws
+
+| Type                                                                            | Description                                                       |
+|---------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                       | If no wallets have been added.                                    |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)                     | If the wallet, as specified by its ID, does not exist.            |
+| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror)       | If the wallet does not support the signing of transactions.       |
+| [`OperationCanceledError`](errors#operationcancelederror)                       | If the request to sign the transactions was canceled by the user. |
+| [`FailedToPostSomeTransactionsError`](errors#failedtopostsometransactionserror) | If some transactions were not sent properly.                      |
 
 ### `setDefaultWallet(id)`
 
@@ -106,13 +135,13 @@
 
 #### Throws
 
-| Type                                                                           | Description                                            |
-|--------------------------------------------------------------------------------|--------------------------------------------------------|
-| [`NoWalletsDetectedError`](errors#4001-nowalletsdetectederror)                 | If no wallets have been added.                         |
-| [`WalletDoesNotExistError`](errors#4002-walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist. |
-| [`WalletFeatureNotAvailableError`](errors#4100-walletfeaturenotavailableerror) | If the wallet does not support the signing of data.    |
-| [`OperationCanceledError`](errors#4101-operationcancelederror)                 | If the request to sign data was canceled by the user.  |
-| [`UnauthorizedSignerError`](errors#4103-unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.    |
+| Type                                                                      | Description                                            |
+|---------------------------------------------------------------------------|--------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                 | If no wallets have been added.                         |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist. |
+| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror) | If the wallet does not support the signing of data.    |
+| [`OperationCanceledError`](errors#operationcancelederror)                 | If the request to sign data was canceled by the user.  |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.    |
 
 ### `signTxns(options)`
 
@@ -132,13 +161,13 @@
 
 #### Throws
 
-| Type                                                                           | Description                                                       |
-|--------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [`NoWalletsDetectedError`](errors#4001-nowalletsdetectederror)                 | If no wallets have been added.                                    |
-| [`WalletDoesNotExistError`](errors#4002-walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist.            |
-| [`WalletFeatureNotAvailableError`](errors#4100-walletfeaturenotavailableerror) | If the wallet does not support the signing of transactions.       |
-| [`OperationCanceledError`](errors#4101-operationcancelederror)                 | If the request to sign the transactions was canceled by the user. |
-| [`UnauthorizedSignerError`](errors#4103-unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.               |
+| Type                                                                      | Description                                                       |
+|---------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [`NoWalletsDetectedError`](errors#nowalletsdetectederror)                 | If no wallets have been added.                                    |
+| [`WalletDoesNotExistError`](errors#walletdoesnotexisterror)               | If the wallet, as specified by its ID, does not exist.            |
+| [`WalletFeatureNotAvailableError`](errors#walletfeaturenotavailableerror) | If the wallet does not support the signing of transactions.       |
+| [`OperationCanceledError`](errors#operationcancelederror)                 | If the request to sign the transactions was canceled by the user. |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)               | If supplied signer is not authorized by the wallet.               |
 
 ## Types
 
@@ -165,6 +194,20 @@
 | genesisId   | `string`                              | yes      | -       | The genesis ID of the network the wallet enabled.            |
 | id          | `string`                              | yes      | -       | The ID of the wallet that was used.                          |
 | sessionId   | `string`                              | no       | -       | A unique identifier for this session provided by the wallet. |
+
+### `IPostTxnsOptions`
+
+| Name   | Type       | Required  | Default | Description                                                                                                   |
+|--------|------------|-----------|---------|---------------------------------------------------------------------------------------------------------------|
+| id     | `string`   | no        | -       | The ID of the wallet to use to post the transactions. If none is specified, then the default wallet is used.  |
+| stxns  | `string[]` | yes       | -       | A list of base64 encoded signed transactions to be sent to the network.                                       |
+
+### `IPostTxnsResult`
+
+| Name   | Type       | Required | Default | Description                                                                                          |
+|--------|------------|----------|---------|------------------------------------------------------------------------------------------------------|
+| id     | `string`   | yes      | -       | The ID of the wallet that was used.                                                                  |
+| txnIDs | `string[]` | yes      | -       | A list of 52-character base32 strings (without padding) corresponding the completed transaction IDs. |
 
 ### `ISignBytesOptions`
 

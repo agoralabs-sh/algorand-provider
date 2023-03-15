@@ -15,6 +15,8 @@ import {
   IBaseResult,
   IEnableOptions,
   IEnableResult,
+  IPostTxnsOptions,
+  IPostTxnsResult,
   ISignBytesOptions,
   ISignBytesResult,
   ISignTxnsOptions,
@@ -54,6 +56,39 @@ export default class AlgorandProvider {
     }
 
     return this.wallets[this.defaultWalletIndex] || null;
+  }
+
+  /**
+   * Convenience function that simply gets the wallet specified by the ID (or the default if ID is not provided), or
+   * throws an error.
+   * @param {string} id - [optional] the ID of the wallet.
+   * @returns {BaseWalletManager} the wallet, as specified by the ID, or the default wallet.
+   * @throws {NoWalletsDetectedError} if no wallets have been added.
+   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @private
+   */
+  private getWalletOrThrowError(id?: string): BaseWalletManager {
+    let wallet: BaseWalletManager | null;
+
+    if (this.wallets.length <= 0) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    wallet = this.getWallet();
+
+    if (id) {
+      wallet = this.getWallet(id);
+
+      if (!wallet) {
+        throw new WalletDoesNotExistError(id);
+      }
+    }
+
+    if (!wallet) {
+      throw new NoWalletsDetectedError(`no wallets detected`);
+    }
+
+    return wallet;
   }
 
   /**
@@ -140,6 +175,37 @@ export default class AlgorandProvider {
   }
 
   /**
+   * Posts a list of signed transactions to the network.
+   * @param {IBaseOptions & IPostTxnsOptions} options - an object containing the wallet information and the signed
+   * transactions to be sent to the network.
+   * @returns {IBaseResult & IPostTxnsResult} an object containing the wallet information and the IDs of the
+   * transactions that were committed to the blockchain.
+   * @throws {NoWalletsDetectedError} if no wallets have been added.
+   * @throws {WalletDoesNotExistError} if the specified wallet does not exist.
+   * @throws {WalletFeatureNotAvailableError} if the wallet does not support the posting of transactions.
+   * @throws {OperationCanceledError} if the request was denied by the user.
+   * @throws {FailedToPostSomeTransactionsError} if some transactions were not sent properly.
+   */
+  public async postTxns({
+    id,
+    ...postTxnsOptions
+  }: IBaseOptions & IPostTxnsOptions): Promise<IBaseResult & IPostTxnsResult> {
+    const wallet: BaseWalletManager = this.getWalletOrThrowError(id);
+    let result: IPostTxnsResult;
+
+    if (!wallet.postTxns) {
+      throw new WalletFeatureNotAvailableError(wallet.id, 'postTxns');
+    }
+
+    result = await wallet.postTxns?.(postTxnsOptions);
+
+    return {
+      id: wallet.id,
+      ...result,
+    };
+  }
+
+  /**
    * Sets the default wallet by ID. If the wallet does not exist, the default wallet is left unchanged.
    * @param {string} id - the ID of the wallet to set to default.
    */
@@ -167,26 +233,8 @@ export default class AlgorandProvider {
   }: IBaseOptions & ISignBytesOptions): Promise<
     IBaseResult & ISignBytesResult
   > {
+    const wallet: BaseWalletManager = this.getWalletOrThrowError(id);
     let result: ISignBytesResult;
-    let wallet: BaseWalletManager | null;
-
-    if (this.wallets.length <= 0) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
-    }
-
-    wallet = this.getWallet();
-
-    if (id) {
-      wallet = this.getWallet(id);
-
-      if (!wallet) {
-        throw new WalletDoesNotExistError(id);
-      }
-    }
-
-    if (!wallet) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
-    }
 
     if (!wallet.signBytes) {
       throw new WalletFeatureNotAvailableError(wallet.id, 'signBytes');
@@ -217,26 +265,8 @@ export default class AlgorandProvider {
     id,
     ...signTxnsOptions
   }: IBaseOptions & ISignTxnsOptions): Promise<IBaseResult & ISignTxnsResult> {
+    const wallet: BaseWalletManager = this.getWalletOrThrowError(id);
     let result: ISignTxnsResult;
-    let wallet: BaseWalletManager | null;
-
-    if (this.wallets.length <= 0) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
-    }
-
-    wallet = this.getWallet();
-
-    if (id) {
-      wallet = this.getWallet(id);
-
-      if (!wallet) {
-        throw new WalletDoesNotExistError(id);
-      }
-    }
-
-    if (!wallet) {
-      throw new NoWalletsDetectedError(`no wallets detected`);
-    }
 
     if (!wallet.signTxns) {
       throw new WalletFeatureNotAvailableError(wallet.id, 'signTxns');

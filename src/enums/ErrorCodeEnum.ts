@@ -9,6 +9,8 @@ enum ErrorCodeEnum {
   NetworkNotSupportedError = 4102,
   UnauthorizedSignerError = 4103,
   // sign errors
+  // post errors
+  FailedToPostSomeTransactionsError = 4400,
 }
 
 export default ErrorCodeEnum;

@@ -7,6 +7,7 @@ import { ErrorCodeEnum } from '../enums';
 
 // Errors
 import {
+  FailedToPostSomeTransactionsError,
   NetworkNotSupportedError,
   NoWalletsDetectedError,
   OperationCanceledError,
@@ -21,8 +22,10 @@ import BaseWalletManager from './BaseWalletManager';
 
 // Types
 import {
+  IBaseResult,
   IEnableOptions,
   IEnableResult,
+  IPostTxnsResult,
   ISignBytesOptions,
   ISignBytesResult,
 } from '../types';
@@ -195,6 +198,163 @@ describe(AlgorandProvider.name, () => {
     });
   });
 
+  describe(`${AlgorandProvider.name}#postTxns`, () => {
+    it('should throw an error if no wallets are detected', async () => {
+      try {
+        // Arrange
+        // Act
+        await algorandProvider.postTxns({
+          id: wallet.id,
+          stxns: [randomBytes(32).toString('base64')],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as NoWalletsDetectedError).code).toBe(
+          ErrorCodeEnum.NoWalletsDetectedError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown a no wallet detected error');
+    });
+
+    it('should throw an error if the specified wallet does not exist', async () => {
+      // Arrange
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.postTxns({
+          id: faker.datatype.uuid(), // use some random id
+          stxns: [randomBytes(32).toString('base64')],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as WalletDoesNotExistError).code).toBe(
+          ErrorCodeEnum.WalletDoesNotExistError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown a wallet does not exist error');
+    });
+
+    it('should throw an error if the feature is not available in the wallet', async () => {
+      // Arrange
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.postTxns({
+          id: wallet.id,
+          stxns: [randomBytes(32).toString('base64')],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as WalletFeatureNotAvailableError).code).toBe(
+          ErrorCodeEnum.WalletFeatureNotAvailableError
+        );
+
+        return;
+      }
+
+      throw new Error(
+        'should have thrown a wallet feature not available error'
+      );
+    });
+
+    it('should throw an error if the operation was canceled by the user', async () => {
+      // Arrange
+      wallet.postTxns = () =>
+        Promise.reject(
+          new OperationCanceledError('operation canceled by user')
+        );
+
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.postTxns({
+          id: wallet.id,
+          stxns: [randomBytes(32).toString('base64')],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as OperationCanceledError).code).toBe(
+          ErrorCodeEnum.OperationCanceledError
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown an operation canceled error');
+    });
+
+    it('should throw an error if not all transactions were sent properly', async () => {
+      // Arrange
+      const stxns: string[] = [randomBytes(32).toString('base64')];
+      const successTxnIDs: (string | null)[] = Array.from(
+        { length: stxns.length },
+        () => null
+      );
+
+      wallet.postTxns = () =>
+        Promise.reject(
+          new FailedToPostSomeTransactionsError(
+            successTxnIDs,
+            'failed to send all transactions'
+          )
+        );
+
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.postTxns({
+          id: wallet.id,
+          stxns,
+        });
+      } catch (error) {
+        // Assert
+        expect((error as FailedToPostSomeTransactionsError).code).toBe(
+          ErrorCodeEnum.FailedToPostSomeTransactionsError
+        );
+        expect(
+          (error as FailedToPostSomeTransactionsError).successTxnIDs
+        ).toEqual(successTxnIDs);
+
+        return;
+      }
+
+      throw new Error('should have thrown a failed post transactions error');
+    });
+
+    it('should successfully post transactions', async () => {
+      // Arrange
+      const stxns: string[] = [randomBytes(32).toString('base64')];
+      const txnIDs: string[] = Array.from({ length: stxns.length }, () =>
+        faker.random.alphaNumeric(52, { casing: 'upper' })
+      );
+      let result: IBaseResult & IPostTxnsResult;
+
+      wallet.postTxns = () => Promise.resolve({ txnIDs });
+
+      algorandProvider.addWallet(wallet);
+
+      // Act
+      result = await algorandProvider.postTxns({
+        id: wallet.id,
+        stxns,
+      });
+
+      // Assert
+      expect(result.id).toBe(wallet.id);
+      expect(result.txnIDs).toEqual(txnIDs);
+    });
+  });
+
   describe(`${AlgorandProvider.name}#signBytes`, () => {
     it('should throw an error if no wallets are detected', async () => {
       try {
@@ -325,7 +485,7 @@ describe(AlgorandProvider.name, () => {
     it('should sign the data', async () => {
       // Arrange
       const signature: Uint8Array = new Uint8Array(randomBytes(32));
-      let result: ISignBytesResult;
+      let result: IBaseResult & ISignBytesResult;
 
       wallet.signBytes = () =>
         Promise.resolve({
@@ -341,6 +501,7 @@ describe(AlgorandProvider.name, () => {
       });
 
       // Assert
+      expect(result.id).toBe(wallet.id);
       expect(result.signature).toEqual(signature);
     });
   });
