@@ -1,0 +1,130 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Initialization
+
+In order for dApps to interact wallets, the dApp will you use the `window.algorand` object.
+
+When injecting a wallet interface, it maybe necessary to create the `window.algorand` object:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const { AlgorandProvider } = require('@agoralabs-sh/algorand-provider');
+
+if (!window.algorand) {
+  window.algorand = new AlgorandProvider();
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import { AlgorandProvider } from '@agoralabs-sh/algorand-provider';
+
+if (!window.algorand) {
+    window.algorand = new AlgorandProvider();
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+As `window.algorand` is a global object and could possibly be overridden, so it maybe necessary to check that the object is the correct type.
+
+:::
+
+Next, a wallet manager will need to be created, conforming to the [`BaseWalletManager`](../../api-reference/base-wallet-manager), and can be added to the `window.algorand` provider:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+const { BaseWalletManager } = require('@agoralabs-sh/algorand-provider');
+
+class AwesomeWallet extends BaseWalletManager {
+  enable(options) {
+    // ...logic goes here
+  }
+
+  postTxns(options) {
+    // ...logic goes here
+  }
+
+  signBytes() {
+    // ...logic goes here
+  }
+
+  signTxns() {
+    // ...logic goes here
+  }
+}
+
+const wallet = new AwesomeWallet({
+  id: 'awesome-wallet',
+});
+
+window.algorand.addWallet(wallet, {
+  replace: true, // ensures your wallet, by its id, is the only one
+});
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import {
+  BaseWalletManager,
+  IEnableOptions,
+  IEnableResult,
+  IPostTxnsOptions,
+  IPostTxnsResult,
+  ISignBytesOptions,
+  ISignBytesResult,
+  ISignTxnsOptions,
+  ISignTxnsResult,
+} from '@agoralabs-sh/algorand-provider';
+
+class AwesomeWallet extends BaseWalletManager {
+  public async enable(options?: IEnableOptions): Promise<IEnableResult> {
+    // ...logic goes here
+  }
+
+  public async postTxns(options: IPostTxnsOptions): Promise<IPostTxnsResult> {
+    // ...logic goes here
+  }
+
+  public async signBytes(options: ISignBytesOptions): Promise<ISignBytesResult> {
+    // ...logic goes here
+  }
+
+  public async signTxns(options: ISignTxnsOptions): Promise<ISignTxnsResult> {
+    // ...logic goes here
+  }
+}
+
+const wallet: AwesomeWallet = new AwesomeWallet({
+  id: 'awesome-wallet',
+});
+
+window.algorand.addWallet(wallet, {
+  replace: true, // ensures your wallet, by its id, is the only one
+});
+```
+
+  </TabItem>
+</Tabs>
