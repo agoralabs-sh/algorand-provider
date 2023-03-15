@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/agoralabs-sh/algorand-provider/actions/workflows/lint_build_test.yml" target="_blank">
-    <img src="https://github.com/agoralabs-sh/algorand-provider/actions/workflows/lint_build_test.yml/badge.svg" alt="Build" />
+    <img src="https://github.com/agoralabs-sh/algorand-provider/actions/workflows/lint_build_test.yml/badge.svg" alt="Build, lint and test" />
   </a>
   <a href="https://img.shields.io/npm/v/@agoralabs-sh/algorand-provider" target="_blank">
     <img src="https://img.shields.io/npm/v/@agoralabs-sh/algorand-provider" alt="npm" />
@@ -16,15 +16,13 @@
 </p>
 
 <p align="center">
-  Algorand provider is an interface that bridges the gap between to allow dApps to connect, and interact, with wallets in a standardized way.
+  Algorand provider is an interface that bridges the gap allowing dApps to connect, and interact, with wallets in a standardized way.
 </p>
 
 ### Table of contents
 
 * [1. Installation](#-1-installation)
-* [2. Usage](#-2-usage)
-  * [2.1. Quick Start](#21-quick-start)
-  * [2.2. API](#22-api)
+* [2. Documentation](#-2-documentation)
 * [3. Development](#-3-development)
   * [3.1. Requirements](#31-requirements)
   * [3.2. Setup](#32-setup)
@@ -47,11 +45,9 @@ npm install @agoralabs-sh/algorand-provider
 yarn add @agoralabs-sh/algorand-provider
 ```
 
-## 🪄 2. Usage
+## 📚 2. Documentation
 
-### 2.1 Quick Start
-
-...TBC
+For full documentation, please see [here][documentation].
 
 <sup>[Back to top ^][table-of-contents]</sup>
 
@@ -93,7 +89,7 @@ This will compile the Typescript source code into a `dist/` directory.
 
 ### 4.1 Useful Information
 
-...TBC
+* [ARC-0001][arc-0001]: the direction of the code leans heavily on what this ARC suggests and is in reality an extension of this ARC.
 
 <sup>[Back to top ^][table-of-contents]</sup>
 
@@ -116,7 +112,9 @@ Please refer to the [LICENSE][license] file.
 <sup>[Back to top ^][table-of-contents]</sup>
 
 <!-- Links -->
+[arc-0001]: https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0001.md
 [contribute]: ./CONTRIBUTING.md
+[documentation]: https://algorand-provider.agoralabs.sh
 [license]: ./LICENSE
 [table-of-contents]: #table-of-contents
 [yarn]: https://yarnpkg.com/
