@@ -56,6 +56,7 @@ export default abstract class BaseWalletManager {
    * network.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {UnauthorizedSignerError} if the supplied signer is not authorized by the wallet.
+   * @throws {InvalidGroupIdError} if computed group ID for the supplied transactions does not match the assigned group ID.
    */
   public signTxns?(options: ISignTxnsOptions): Promise<ISignTxnsResult>;
 }

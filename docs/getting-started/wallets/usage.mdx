@@ -1,9 +1,14 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Initialization
+# Usage
 
-In order for dApps to interact with wallets, the dApp will you use the `window.algorand` object.
+* [Initializing the Algorand provider](#initializing-the-algorand-provider)
+* [Adding a wallet manager](#adding-a-wallet-manager)
+
+## Initializing the Algorand provider
+
+In order for dApps to interact with wallets, the dApp will use the `window.algorand` object.
 
 When initializing a wallet interface, it maybe necessary to create the `window.algorand` object:
 
@@ -43,7 +48,9 @@ As `window.algorand` is a global object and could possibly be overridden, so it 
 
 :::
 
-Next, a wallet manager will need to be created, conforming to the [`BaseWalletManager`](../../api-reference/base-wallet-manager) class. Then this manager can be added to the `window.algorand` provider:
+## Adding a wallet manager
+
+Next, a wallet manager will need to be created, conforming to the [`BaseWalletManager`](../../api-reference/base-wallet-manager) class. Then this manager can then be added to the `window.algorand` provider:
 
 <Tabs
   defaultValue="javascript"
@@ -79,7 +86,7 @@ const wallet = new AwesomeWallet({
 });
 
 window.algorand.addWallet(wallet, {
-  replace: true, // ensures your wallet, by its id, is the only one
+  replace: true, // ensures your wallet is the only one with the provided id
 });
 ```
 
@@ -122,7 +129,7 @@ const wallet: AwesomeWallet = new AwesomeWallet({
 });
 
 window.algorand.addWallet(wallet, {
-  replace: true, // ensures your wallet, by its id, is the only one
+  replace: true, // ensures your wallet is the only one with the provided id
 });
 ```
 

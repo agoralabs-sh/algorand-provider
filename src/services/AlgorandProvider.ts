@@ -260,6 +260,7 @@ export default class AlgorandProvider {
    * @throws {WalletOperationNotSupportedError} if the wallet does not support the signing of transactions.
    * @throws {OperationCanceledError} if the request was denied by the user.
    * @throws {UnauthorizedSignerError} if supplied signer is not authorized by the wallet.
+   * @throws {InvalidGroupIdError} if computed group ID for the supplied transactions does not match the assigned group ID.
    */
   public async signTxns({
     id,

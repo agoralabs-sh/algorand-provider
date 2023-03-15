@@ -8,6 +8,7 @@ import { ErrorCodeEnum } from '../enums';
 // Errors
 import {
   FailedToPostSomeTransactionsError,
+  InvalidGroupIdError,
   NetworkNotSupportedError,
   NoWalletsDetectedError,
   OperationCanceledError,
@@ -626,6 +627,43 @@ describe(AlgorandProvider.name, () => {
       }
 
       throw new Error('should have thrown an operation canceled error');
+    });
+
+    it.only('should throw an error if the computed group id is invalid', async () => {
+      // Arrange
+      const computedGroupId: string = randomBytes(32).toString('base64');
+
+      wallet.signTxns = () =>
+        Promise.reject(new InvalidGroupIdError(computedGroupId));
+
+      algorandProvider.addWallet(wallet);
+
+      try {
+        // Act
+        await algorandProvider.signTxns({
+          id: wallet.id,
+          txns: [
+            {
+              txn: randomBytes(32).toString('base64'),
+            },
+            {
+              txn: randomBytes(32).toString('base64'),
+            },
+          ],
+        });
+      } catch (error) {
+        // Assert
+        expect((error as InvalidGroupIdError).code).toBe(
+          ErrorCodeEnum.InvalidGroupIdError
+        );
+        expect((error as InvalidGroupIdError).computedGroupId).toBe(
+          computedGroupId
+        );
+
+        return;
+      }
+
+      throw new Error('should have thrown an invalid group id error');
     });
   });
 });

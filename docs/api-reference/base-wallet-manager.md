@@ -95,10 +95,10 @@ This function is optional.
 
 #### Throws
 
-| Type                                                                          | Description                                            |
-|-------------------------------------------------------------------------------|--------------------------------------------------------|
-| [`OperationCanceledError`](errors#operationcancelederror)                     | If the request to sign data was canceled by the user.  |
-| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)                   | If supplied signer is not authorized by the wallet.    |
+| Type                                                        | Description                                           |
+|-------------------------------------------------------------|-------------------------------------------------------|
+| [`OperationCanceledError`](errors#operationcancelederror)   | If the request to sign data was canceled by the user. |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror) | If supplied signer is not authorized by the wallet.   |
 
 ### `signTxns(options)`
 
@@ -124,10 +124,11 @@ This function is optional.
 
 #### Throws
 
-| Type                                                                          | Description                                                       |
-|-------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [`OperationCanceledError`](errors#operationcancelederror)                     | If the request to sign the transactions was canceled by the user. |
-| [`UnauthorizedSignerError`](errors#unauthorizedsignererror)                   | If supplied signer is not authorized by the wallet.               |
+| Type                                                        | Description                                                                              |
+|-------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| [`OperationCanceledError`](errors#operationcancelederror)   | If the request to sign the transactions was canceled by the user.                        |
+| [`UnauthorizedSignerError`](errors#unauthorizedsignererror) | If supplied signer is not authorized by the wallet.                                      |
+| [`InvalidGroupIdError`](errors#invalidgroupiderror)         | If computed group ID for the supplied transactions does not match the assigned group ID. |
 
 ## Types
 

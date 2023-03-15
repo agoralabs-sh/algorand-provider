@@ -2,16 +2,17 @@
 
 ## Summary
 
-| Code | Name                                                                      | Summary                                                                     |
-|------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| 4000 | [`UnknownError`](#unknownerror)                                           | The default error response, usually indicates something is not quite right. |
-| 4001 | [`OperationCanceledError`](#operationcancelederror)                       | When a user has rejected the operation.                                     |
-| 4002 | [`NoWalletsDetectedError`](#nowalletsdetectederror)                       | No wallets have been initialized.                                           |
-| 4003 | [`WalletDoesNotExistError`](#walletdoesnotexisterror)                     | The specified wallet does not exist.                                        |
-| 4100 | [`UnauthorizedSignerError`](#unauthorizedsignererror)                     | The wallet has not given permission to use a specified signer.              |
-| 4200 | [`WalletOperationNotSupportedError`](#walletoperationnotsupportederror)   | The wallet does not support this operation.                                 |
-| 4203 | [`NetworkNotSupportedError`](#networknotsupportederror)                   | Network is not supported.                                                   |
-| 4400 | [`FailedToPostSomeTransactionsError`](#failedtopostsometransactionserror) | When some transactions were not sent properly.                              |
+| Code | Name                                                                      | Summary                                                                                   |
+|------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| 4000 | [`UnknownError`](#unknownerror)                                           | The default error response, usually indicates something is not quite right.               |
+| 4001 | [`OperationCanceledError`](#operationcancelederror)                       | When a user has rejected the operation.                                                   |
+| 4002 | [`NoWalletsDetectedError`](#nowalletsdetectederror)                       | No wallets have been initialized.                                                         |
+| 4003 | [`WalletDoesNotExistError`](#walletdoesnotexisterror)                     | The specified wallet does not exist.                                                      |
+| 4100 | [`UnauthorizedSignerError`](#unauthorizedsignererror)                     | The wallet has not given permission to use a specified signer.                            |
+| 4200 | [`WalletOperationNotSupportedError`](#walletoperationnotsupportederror)   | The wallet does not support this operation.                                               |
+| 4203 | [`NetworkNotSupportedError`](#networknotsupportederror)                   | Network is not supported.                                                                 |
+| 4301 | [`InvalidGroupIdError`](#invalidgroupiderror)                             | The computed group ID of the atomic transactions is different from teh assigned group ID. |
+| 4400 | [`FailedToPostSomeTransactionsError`](#failedtopostsometransactionserror) | When some transactions were not sent properly.                                            |
 
 ## `UnknownError`
 
@@ -94,6 +95,18 @@ This error is thrown when a provided genesis hash is not supported by the wallet
 | code        | `number` | 4203  | A canonical code for this error.                       |
 | genesisHash | `string` | -     | The genesis hash of the network that is not supported. |
 | message     | `string` | -     | A human readable message.                              |
+
+## `InvalidGroupIdError`
+
+This error is thrown when the wallet attempts to sign atomic transactions in which the computed group ID is different from the assigned group ID.
+
+#### Properties
+
+| Name            | Type     | Value | Description                                          |
+|-----------------|----------|-------|------------------------------------------------------|
+| code            | `number` | 4301  | A canonical code for this error.                     |
+| computedGroupId | `string` | -     | The computed ID of the supplied atomic transactions. |
+| message         | `string` | -     | A human readable message.                            |
 
 ## `FailedToPostSomeTransactionsError`
 
