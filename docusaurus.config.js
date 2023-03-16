@@ -11,7 +11,7 @@ const stylesDir = path.resolve(docsDir, 'styles');
 
 // Links
 const githubLink = 'https://github.com/agoralabs-sh/algorand-provider';
-const npmLink = 'https://npmjs.com/agoralabs-sh/algorand-provider';
+const npmLink = 'https://npmjs.com/package/@agoralabs-sh/algorand-provider';
 
 // Titles
 const title = 'Algorand Provider';
