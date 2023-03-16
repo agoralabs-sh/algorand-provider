@@ -1,7 +1,7 @@
 {
   "name": "@agoralabs-sh/algorand-provider",
   "version": "1.0.0",
-  "description": "Algorand provider is an interface that bridges the gap allowing dApps to connect, and interact, with wallets in a standardized way",
+  "description": "Algorand provider is an interface that bridges the gap between dApps and wallets, allowing dApps to connect, and interact, with wallets in a standardized way.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -31,7 +31,8 @@
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
     "docs:build": "docusaurus build --out-dir .docs",
-    "docs:start": "docusaurus start",
+    "docs:serve": "docusaurus serve --dir .docs --no-open",
+    "docs:start": "docusaurus start --no-open --port 8080",
     "lint": "eslint . --ext .ts --ext .js",
     "prepare": "husky install",
     "prettier": "prettier --config .prettierrc --write \"**/*.{js,json,ts}\"",

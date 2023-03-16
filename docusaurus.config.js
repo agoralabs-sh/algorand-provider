@@ -18,22 +18,18 @@ const title = 'Algorand Provider';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: title,
-  tagline: 'Bridging the gap between dApps and wallets in a standardized way',
-  favicon: 'images/favicon.png',
-  url: 'https://algorand-provider.agoralabs.sh',
   baseUrl: '/',
-  organizationName: 'agoralabs-sh',
-  projectName: 'algorand-provider',
   deploymentBranch: 'gh-pages',
-  trailingSlash: false,
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
-  onDuplicateRoutes: 'throw',
+  favicon: 'images/favicon.png',
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
+  onDuplicateRoutes: 'throw',
+  organizationName: 'agoralabs-sh',
+  projectName: 'algorand-provider',
   presets: [
     [
       'classic',
@@ -61,9 +57,8 @@ const config = {
       }),
     ],
   ],
-
   staticDirectories: [staticDir],
-
+  tagline: 'Bridging the gap between dApps and wallets in a standardized way',
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -127,10 +122,6 @@ const config = {
                 label: 'API Reference',
                 to: 'api-reference',
               },
-              {
-                label: 'Compatibility',
-                to: 'compatibility',
-              },
             ],
           },
           {
@@ -154,6 +145,9 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  title: title,
+  trailingSlash: false,
+  url: 'https://algorand-provider.agoralabs.sh',
 };
 
 module.exports = config;

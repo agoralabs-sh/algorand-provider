@@ -1,0 +1,28 @@
+---
+slug: /
+---
+
+import TOCInline from '@theme/TOCInline';
+
+# Overview
+
+<TOCInline
+  maxHeadingLevel={4}
+  toc={toc}
+/>
+
+## Introduction
+
+Algorand provider is an interface that bridges the gap between dApps and wallets, allowing dApps to connect, and interact, with wallets in a standardized way.
+
+Algorand provider works towards achieving three main goals:
+
+1. Creating a common interface between dApps and wallets.
+2. Allowing wallets to work in unison (the `window.algorand` object should be shared).
+3. Allowing dApps to choose what wallet to use.
+
+## How it works
+
+At its core, [`AlgorandProvider`](api-reference/algorand-provider) is instantiated by wallets and assigned to the global `window.algorand` object within each tab. The allows dApps to interact with wallet using a common interface.
+
+Algorand provider has also been designed in a way to allow for more than one wallet to occupy the `window.algorand` object and give the dApp; the user, the choice of what wallet to interact with.
