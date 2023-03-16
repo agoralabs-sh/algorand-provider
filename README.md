@@ -13,7 +13,7 @@
   <a href="https://github.com/agoralabs-sh/algorand-provider/actions/workflows/build_documentation.yml" target="_blank">
     <img src="https://github.com/agoralabs-sh/algorand-provider/actions/workflows/build_documentation.yml/badge.svg" alt="Build documentation" />
   </a>
-  <a href="https://img.shields.io/npm/v/@agoralabs-sh/algorand-provider" target="_blank">
+  <a href="https://npmjs.com/package/@agoralabs-sh/algorand-provider" target="_blank">
     <img src="https://img.shields.io/npm/v/@agoralabs-sh/algorand-provider" alt="npm" />
   </a>
 </p>
