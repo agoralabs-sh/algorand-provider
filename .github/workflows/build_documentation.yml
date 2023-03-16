@@ -1,0 +1,20 @@
+name: Build Documentation
+
+on:
+  pull_request:
+
+jobs:
+  build_documentation:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🛎 Checkout"
+        uses: actions/checkout@v3
+      - name: "🔧 Setup"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: "📦 Install"
+        run: yarn install --ignore-scripts
+      - name: "🏗️ Build"
+        run: yarn docs:build
