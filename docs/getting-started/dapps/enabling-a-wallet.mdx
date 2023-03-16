@@ -1,0 +1,283 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import TOCInline from '@theme/TOCInline';
+
+# Enabling A Wallet
+
+<TOCInline
+  maxHeadingLevel={4}
+  toc={toc}
+/>
+
+## Overview
+
+Before we can start interacting with a wallet, we will need to enable the dApp on a wallet. This will achieve two things:
+
+* it will authorize your dApp with the wallet; and
+* it will get a list of the accounts available for your dApp to use.
+
+:::note
+
+It should be safe to call [`enable()`](../../api-reference/algorand-provider#enableoptions) as many times as your dApp wants, the wallet should assume this.
+
+:::
+
+:::caution
+
+The definition of "enabling" a wallet can mean different things to different wallets, but it is highly recommended that you first run [`enable()`](../../api-reference/algorand-provider#enableoptions) before attempting any other operations.
+
+:::
+
+## Enabling the default wallet
+
+If you only want the default wallet, you can simply call:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.enable();
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
+    genesisId: 'mainnet-v1.0',
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & IEnableResult = await window.algorand.enable();
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
+    genesisId: 'mainnet-v1.0',
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If no wallets does exist, then a [`NoWalletsDetectedError`](../../api-reference/errors#nowalletsdetectederror) will be thrown.
+
+:::
+
+## Enabling a specific wallet
+
+If you want to target a specific wallet, you can simply pass the ID of the wallet to the options object:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.enable({
+    id: 'another-awesome-wallet',
+  });
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
+    genesisId: 'mainnet-v1.0',
+    id: 'another-awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & IEnableResult = await window.algorand.enable({
+    id: 'another-awesome-wallet',
+  });
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=',
+    genesisId: 'mainnet-v1.0',
+    id: 'another-awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If the specified wallet does not exist, then a [`WalletDoesNotExistError`](../../api-reference/errors#walletdoesnotexisterror) will be thrown.
+
+:::
+
+## Enabling a specific network
+
+If you want to target a specific network, and the wallet supports it, you can simply pass the genesis hash of the network to the options object:
+
+<Tabs
+  defaultValue="javascript"
+  values={[
+    { label: 'Javascript', value: 'javascript' },
+    { label: 'TypeScript', value: 'typescript' },
+  ]}>
+  <TabItem value="javascript">
+
+```js
+try {
+  const result = await window.algorand.enable({
+    genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
+  });
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
+    genesisId: 'testnet-v1.0',
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+  <TabItem value="typescript">
+
+```typescript
+import type { IBaseResult, IEnableResult } from '@agoralabs-sh/algorand-provider';
+
+try {
+  const result: IBaseResult & IEnableResult = await window.algorand.enable({
+    genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
+  });
+
+  console.log(result);
+  /*
+  {
+    accounts: [
+      {
+        address: 'P3AIQVDJ2CTH54KSJE63YWB7IZGS4W4JGC53I6GK72BGZ5BXO2B2PS4M4U',
+        name: 'Wallet-1',
+      },
+      {
+        address: '6GT6EXFDAHZDZYUOPT725ZRWYBZDCEGYT7SYYXGJKRFUAG5B7JMI7DQRNQ',
+        name: 'Wallet-2',
+      },
+    ],
+    genesisHash: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=',
+    genesisId: 'testnet-v1.0',
+    id: 'awesome-wallet',
+    sessionId: 'ab192498-0c63-4028-80fd-f148710611d8',
+  }
+  */
+} catch (error) {
+  // handle error
+}
+```
+
+  </TabItem>
+</Tabs>
+
+:::caution
+
+If the specified network is not supported, then a [`NetworkNotSupportedError`](../../api-reference/errors#networknotsupportederror) will be thrown.
+
+:::
