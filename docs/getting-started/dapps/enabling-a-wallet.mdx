@@ -11,7 +11,7 @@ import TOCInline from '@theme/TOCInline';
 
 ## Overview
 
-Before we can start interacting with a wallet, we will need to enable the dApp on a wallet. This will achieve two things:
+Before we can start interacting with a wallet, we will need ask the wallet to enable the dApp. This will achieve two things:
 
 * it will authorize your dApp with the wallet; and
 * it will get a list of the accounts available for your dApp to use.
@@ -106,7 +106,7 @@ try {
 
 :::caution
 
-If no wallets does exist, then a [`NoWalletsDetectedError`](../../api-reference/errors#nowalletsdetectederror) will be thrown.
+If no wallets are found, then a [`NoWalletsDetectedError`](../../api-reference/errors#nowalletsdetectederror) will be thrown.
 
 :::
 
