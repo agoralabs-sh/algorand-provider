@@ -1,6 +1,6 @@
 {
   "name": "@agoralabs-sh/algorand-provider",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Algorand provider is an interface that bridges the gap between dApps and wallets, allowing dApps to connect, and interact, with wallets in a standardized way.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
