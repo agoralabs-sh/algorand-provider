@@ -1,16 +1,16 @@
-name: Bug
-description: File a bug
+name: "\U0001F41B Bug Report"
+description: "File a bug report"
 title: "[Bug]: "
-labels: ["🐛 bug"]
+labels: ["\U0001F41B bug"]
 assignees:
-  - agoralabs-bot
+  - kieranroneill
 body:
-  # Welcome
+  # welcome
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug, all issues are welcome and remember, you're awesome!
-  # Contact
+        Thanks for taking the time to fill out this bug report, all issues are welcome and remember, you're awesome!
+  # contact
   - type: input
     id: contact
     attributes:
@@ -19,21 +19,22 @@ body:
       placeholder: e.g. email@example.com
     validations:
       required: false
-  # Version
+  # version
   - type: dropdown
     id: version
     attributes:
       label: Version
       description: What version of the software are you running?
       options:
-        - 1.0.0 (Default)
+        - 1.1.0
+        - 1.0.0
     validations:
       required: true
-  # Platform
+  # browser
   - type: dropdown
-    id: platform
+    id: browsers
     attributes:
-      label: What platform are you seeing the problem on?
+      label: What browser are you seeing the problem on?
       multiple: true
       options:
         - Firefox
@@ -41,7 +42,9 @@ body:
         - Safari
         - Microsoft Edge
         - Other
-  # Description
+    validations:
+      required: true
+  # description
   - type: textarea
     id: description
     attributes:
@@ -51,16 +54,16 @@ body:
       value: "A bug happened!"
     validations:
       required: true
-  # Steps to reproduce
+  # steps to reproduce
   - type: textarea
     id: reproduction
     attributes:
       label: Steps To Reproduce
       description: Use a simple bulleted pointed list of the steps to reproduce.
-      placeholder: * Light a small spark...
+      placeholder: "* Light a small spark..."
     validations:
       required: true
-  # Expected Results
+  # expected results
   - type: textarea
     id: expected
     attributes:
@@ -69,7 +72,7 @@ body:
       placeholder: My NFDomain data!
     validations:
       required: true
-  # Actual Results
+  # actual results
   - type: textarea
     id: actual
     attributes:
@@ -78,12 +81,12 @@ body:
       placeholder: The quantum realm is threatened and we must miniaturize to save it!
     validations:
       required: true
-  # Logs
+  # logs
   - type: textarea
-    id: logs
+    id: browser-console-logs
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: Relevant browser console output
+      description: Please copy and paste any relevant browser console output. This will be automatically formatted into code, so no need for backticks.
       render: shell
     validations:
       required: false
