@@ -1,24 +1,58 @@
-name: Lint, Build & Test
+name: "Pull Request Checks"
 
 on:
   pull_request:
 
 jobs:
-  lint_build_test:
-    name: Lint, Build & Test
+  ##
+  # install
+  ##
+
+  install:
+    name: "Install"
     runs-on: ubuntu-latest
     steps:
       - name: "🛎 Checkout"
         uses: actions/checkout@v3
       - name: "🔧 Setup"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-      - name: "📦 Install"
-        run: yarn install --ignore-scripts
+        uses: ./.github/actions/use-dependencies
+
+  ##
+  # lint, build and test
+  ##
+
+  lint:
+    name: "Lint"
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🛎 Checkout"
+        uses: actions/checkout@v3
+      - name: "🔧 Setup"
+        uses: ./.github/actions/use-dependencies
       - name: "👕 Lint"
         run: yarn lint
+
+  build_chrome:
+    name: "Build"
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🛎 Checkout"
+        uses: actions/checkout@v3
+      - name: "🔧 Setup"
+        uses: ./.github/actions/use-dependencies
       - name: "🏗️ Build"
         run: yarn build
+
+  test:
+    name: "Test"
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🛎 Checkout"
+        uses: actions/checkout@v3
+      - name: "🔧 Setup"
+        uses: ./.github/actions/use-dependencies
       - name: "🧪 Test"
         run: yarn test
