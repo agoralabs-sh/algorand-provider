@@ -4,10 +4,10 @@ import { ErrorCodeEnum } from '../enums';
 // Errors
 import BaseError from './BaseError';
 
-export default class NetworkNotSupported extends BaseError {
+export default class NetworkNotSupportedError extends BaseError {
   public readonly code: ErrorCodeEnum = ErrorCodeEnum.NetworkNotSupportedError;
   public readonly genesisHash: string;
-  public readonly name: string = 'NetworkNotSupported';
+  public readonly name: string = 'NetworkNotSupportedError';
 
   constructor(genesisHash: string, message?: string) {
     super(

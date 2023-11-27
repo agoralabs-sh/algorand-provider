@@ -1,4 +1,4 @@
-name: Release
+name: "Release"
 
 on:
   push:
@@ -7,23 +7,37 @@ on:
       - main
 
 jobs:
-  release:
-    name: Release
+  ##
+  # install
+  ##
+
+  install:
+    name: "Install"
     runs-on: ubuntu-latest
     steps:
       - name: "🛎 Checkout"
         uses: actions/checkout@v3
       - name: "🔧 Setup"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
+        uses: ./.github/actions/use-dependencies
+
+  ##
+  # release
+  ##
+
+  release:
+    name: "Release"
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🛎 Checkout"
+        uses: actions/checkout@v3
       - name: "📝 Create .npmrc"
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.PUBLISH_PUBLIC_PACKAGES_TOKEN }}" >> .npmrc
           echo "@agoralabs-sh:registry=https://registry.npmjs.org" >> .npmrc
           echo "access=public" >> .npmrc
-      - name: "📦 Install"
-        run: yarn install --ignore-scripts
+      - name: "🔧 Setup"
+        uses: ./.github/actions/use-dependencies
       - name: "🏗️ Build"
         run: yarn build
       - name: "🔖 Release"

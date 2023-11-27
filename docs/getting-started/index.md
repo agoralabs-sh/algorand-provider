@@ -4,15 +4,15 @@
 
 For dApp developers.
 
-* [Initialization](dapps/initialization)
-* [Enabling a wallet](dapps/enabling-a-wallet)
-* [Signing transactions](dapps/signing-transactions)
-* [Sending transactions](dapps/sending-transactions)
-* [Signing data](dapps/signing-data)
+* [Initialization](getting-started/dapps/initialization)
+* [Enabling a wallet](getting-started/dapps/enabling-a-wallet)
+* [Signing transactions](getting-started/dapps/signing-transactions)
+* [Sending transactions](getting-started/dapps/sending-transactions)
+* [Signing data](getting-started/dapps/signing-data)
 
 ## Wallets
 
 For wallets.
 
-* [Installation](wallets/installation)
-* [Usage](wallets/usage)
+* [Installation](getting-started/wallets/installation)
+* [Usage](getting-started/wallets/usage)
